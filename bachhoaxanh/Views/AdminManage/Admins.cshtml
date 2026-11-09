@@ -1,0 +1,49 @@
+﻿@model IEnumerable<bachhoaxanh.Models.User>
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewBag.Title = "Quản lý người dùng quản trị";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold text-dark m-0">DANH SÁCH TÀI KHOẢN QUẢN TRỊ (ADMIN)</h4>
+    <a href="/AdminManage/CreateAdmin" class="btn btn-success fw-bold">+ Thêm Admin mới</a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>Mã</th>
+                <th class="text-start">Họ và tên</th>
+                <th class="text-start">Email đăng nhập</th>
+                <th>Số điện thoại</th>
+                <th>Quyền hạn</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>#@item.UserID</td>
+                    <td class="text-start fw-bold">@item.FullName</td>
+                    <td class="text-start">@item.Email</td>
+                    <td>@item.Phone</td>
+                    <td><span class="badge bg-danger">@item.Role</span></td>
+                    <td>
+                        <a href="/AdminManage/DeleteAdmin/@item.UserID" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản Admin này?');">Xóa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

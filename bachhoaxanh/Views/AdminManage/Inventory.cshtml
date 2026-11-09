@@ -1,0 +1,31 @@
+﻿ @{
+        Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+        ViewBag.Title = "Quản lý kho hàng";
+        var inStock = ViewBag.InStockProducts as List<bachhoaxanh.Models.Product>;
+        var outOfStock = ViewBag.OutOfStockProducts as List<bachhoaxanh.Models.Product>;
+    }
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold text-dark m-0">THỐNG KÊ TÌNH TRẠNG KHO HÀNG</h4>
+        <a href="/Admin/Dashboard" class="btn btn-outline-secondary fw-bold">&larr; Quay lại Tổng quan</a>
+    </div>
+
+    <div class="card border-danger mb-5 shadow-sm">
+        <div class="card-header bg-danger text-white fw-bold py-3">
+            1. DANH SÁCH HÀNG CẦN NHẬP  — Có @(outOfStock != null ? outOfStock.Count : 0) mặt hàng
+        </div>
+        <div class="card-body p-0">
+            @Html.Partial("_InventoryPartial", outOfStock)
+        </div>
+    </div>
+
+    
+    <div class="card border-success shadow-sm">
+        <div class="card-header bg-success text-white fw-bold py-3">
+            2. DANH SÁCH HÀNG TỒN KHO  — Có @(inStock != null ? inStock.Count : 0) mặt hàng
+        </div>
+        <div class="card-body p-0">
+            @Html.Partial("_InventoryPartial", inStock)
+        </div>
+    </div>
+

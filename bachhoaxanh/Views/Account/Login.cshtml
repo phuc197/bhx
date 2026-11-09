@@ -1,0 +1,53 @@
+﻿@{
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    ViewData["Title"] = "Đăng nhập hệ thống";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow border-0 rounded-3 my-5">
+            <div class="card-body p-4 p-sm-5">
+                <h3 class="card-title text-center text-success fw-bold mb-4">ĐĂNG NHẬP</h3>
+
+                <!-- Hiển thị thông báo đăng ký thành công nếu có -->
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success text-center py-2 small">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+
+                <!-- Hiển thị lỗi đăng nhập thất bại theo yêu cầu Checklist -->
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger text-center py-2 small">
+                        @ViewBag.Error
+                    </div>
+                }
+
+            <form action="/Account/Login" method="POST">
+                @Html.AntiForgeryToken()
+                <div class="form-floating mb-3">
+                    <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com" required>
+                    <label for="floatingInput">Địa chỉ Email</label>
+                </div>
+                <div class="form-floating mb-4">
+                    <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password" required>
+                    <label for="floatingPassword">Mật khẩu</label>
+                </div>
+
+                <button class="btn btn-success text-uppercase fw-bold w-100 py-2" type="submit">
+                    Đăng nhập
+                </button>
+
+                <hr class="my-4">
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <a class="small text-decoration-none text-danger fw-bold" href="/Account/ForgotPassword">Quên mật khẩu?</a>
+                    <a class="small text-decoration-none text-success" href="/Account/Register">Tạo tài khoản mới!</a>
+                </div>
+
+            </form>
+            </div>
+        </div>
+    </div>
+</div>

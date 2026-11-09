@@ -1,0 +1,54 @@
+﻿@model bachhoaxanh.Models.Product
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewBag.Title = "Thêm sản phẩm mới";
+}
+
+<h4 class="fw-bold text-success mb-4 border-bottom pb-2">THÊM SẢN PHẨM BÁCH HÓA MỚI</h4>
+
+<form action="/Admin/Create" method="POST" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Tên sản phẩm <span class="text-danger">*</span></label>
+            <input type="text" name="ProductName" class="form-control" placeholder="Ví dụ: Sữa tươi Vinamilk 1L" required />
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Danh mục hàng hóa <span class="text-danger">*</span></label>
+            @Html.DropDownList("CategoryID", null, "-- Chọn danh mục --", new { @class = "form-select", @required = "required" })
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label fw-bold">Giá bán (VNĐ) <span class="text-danger">*</span></label>
+            <input type="number" name="Price" class="form-control" min="1000" step="500" placeholder="32000" required />
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label fw-bold">Số lượng nhập kho <span class="text-danger">*</span></label>
+            <input type="number" name="StockQuantity" class="form-control" min="0" placeholder="50" required />
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label fw-bold">Đơn vị tính <span class="text-danger">*</span></label>
+            <input type="text" name="Unit" class="form-control" placeholder="Kg, Bó, Hộp, Chai..." required />
+        </div>
+
+        <!-- Nút Upload hình ảnh từ máy tính -->
+        <div class="col-md-12">
+            <label class="form-label fw-bold">Chọn hình ảnh sản phẩm từ máy tính <span class="text-danger">*</span></label>
+            <input type="file" name="ImageFile" class="form-control" accept="image/*" required />
+        </div>
+
+        <div class="col-md-12">
+            <label class="form-label fw-bold">Mô tả chi tiết sản phẩm</label>
+            <textarea name="Description" class="form-control" rows="3" placeholder="Nguồn gốc, hạn sử dụng, bảo quản..."></textarea>
+        </div>
+
+        <div class="col-12 mt-4">
+            <button type="submit" class="btn btn-success fw-bold px-4">Lưu sản phẩm</button>
+            <a href="/AdminProduct" class="btn btn-outline-secondary ms-2">Quay lại danh sách</a>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,40 @@
+﻿@model IEnumerable<bachhoaxanh.Models.Order>
+
+<h5 class="fw-bold text-success mt-4 mb-3">Lịch sử đơn hàng đã mua (@(Model != null ? Model.Count() : 0) đơn)</h5>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-light border text-muted">Khách hàng này chưa phát sinh đơn hàng nào.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-bordered align-middle text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Ngày đặt</th>
+                    <th class="text-start">Địa chỉ giao</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Xem</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var o in Model)
+                {
+                    <tr>
+                        <td class="fw-bold">#@o.OrderID</td>
+                        <td>@String.Format("{0:dd/MM/yyyy HH:mm}", o.OrderDate)</td>
+                        <td class="text-start">@o.ShippingAddress</td>
+                        <td class="text-danger fw-bold">@String.Format("{0:0,0}", o.TotalAmount) đ</td>
+                        <td><span class="badge bg-warning text-dark">@o.Status</span></td>
+                        <td>
+                            <a href="/AdminManage/OrderDetails/@o.OrderID" class="btn btn-outline-success btn-sm">Hóa đơn</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

@@ -1,0 +1,85 @@
+﻿@model bachhoaxanh.Models.Order
+@{
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    ViewBag.Title = "Hóa đơn mua hàng #" + Model.OrderID;
+    var details = ViewBag.OrderDetails as List<bachhoaxanh.Models.OrderDetail>;
+}
+
+<div class="container my-5">
+    @if (TempData["OrderSuccess"] != null)
+    {
+        <div class="alert alert-success text-center fw-bold shadow-sm mb-4">
+            <i class="fa-solid fa-circle-check me-2"></i>@TempData["OrderSuccess"]
+        </div>
+    }
+
+    <!-- Giao diện thiết kế chuẩn Hóa đơn bán lẻ Bách Hóa Xanh -->
+    <div class="card shadow border-0 mx-auto" style="max-width: 800px;">
+        <div class="card-header bg-success text-white p-4 d-flex justify-content-between align-items-center">
+            <div>
+                <h4 class="mb-0 fw-bold text-warning"><i class="fa-solid fa-leaf me-2"></i>BÁCH HÓA XANH</h4>
+                <small>Hóa đơn bán lẻ điện tử</small>
+            </div>
+            <div class="text-end">
+                <h5 class="mb-0 fw-bold">MÃ ĐƠN: #@Model.OrderID</h5>
+                <small>Ngày lập: @String.Format("{0:dd/MM/yyyy HH:mm}", Model.OrderDate)</small>
+            </div>
+        </div>
+
+        <div class="card-body p-4">
+            <div class="row mb-4 border-bottom pb-3">
+                <div class="col-sm-6">
+                    <h6 class="text-muted text-uppercase small fw-bold">Thông tin khách hàng</h6>
+                    <p class="mb-1 fw-bold">@(Model.User != null ? Model.User.FullName : Session["UserFullName"])</p>
+                    <p class="mb-0 text-muted small">SĐT: @(Model.User != null ? Model.User.Phone : "")</p>
+                </div>
+                <div class="col-sm-6 text-sm-end mt-3 mt-sm-0">
+                    <h6 class="text-muted text-uppercase small fw-bold">Địa chỉ giao nhận</h6>
+                    <p class="mb-1">@Model.ShippingAddress</p>
+                    <span class="badge bg-warning text-dark">Trạng thái: @Model.Status</span>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>STT</th>
+                            <th class="text-start">Tên mặt hàng</th>
+                            <th>Đơn giá</th>
+                            <th>SL</th>
+                            <th class="text-end">Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (details != null)
+                        {
+                            int stt = 1;
+                            foreach (var d in details)
+                            {
+                                <tr>
+                                    <td>@(stt++)</td>
+                                    <td class="text-start fw-bold">@(d.Product != null ? d.Product.ProductName : "Sản phẩm #" + d.ProductID)</td>
+                                    <td>@String.Format("{0:0,0}", d.Price) đ</td>
+                                    <td>@d.Quantity</td>
+                                    <td class="text-end fw-bold">@String.Format("{0:0,0}", d.Price * d.Quantity) đ</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="text-end fw-bold fs-5">TỔNG CỘNG THANH TOÁN:</td>
+                            <td class="text-end fw-bold fs-5 text-danger">@String.Format("{0:0,0}", Model.TotalAmount) đ</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="text-center mt-4 pt-3 border-top">
+                <a href="/Order/History" class="btn btn-outline-secondary me-2">Xem tất cả lịch sử đơn</a>
+                <a href="/" class="btn btn-success fw-bold">Tiếp tục mua sắm</a>
+            </div>
+        </div>
+    </div>
+</div>

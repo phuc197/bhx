@@ -1,0 +1,78 @@
+﻿@model bachhoaxanh.Models.User
+@{
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    ViewData["Title"] = "Đăng ký thành viên";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow border-0 rounded-3 my-4">
+            <div class="card-body p-4 p-sm-5">
+                <h3 class="card-title text-center text-success fw-bold mb-4">ĐĂNG KÝ THÀNH VIÊN</h3>
+
+                <form action="/Account/Register" method="POST">
+                    @Html.AntiForgeryToken()
+
+                    <!-- Hiển thị danh sách thông báo lỗi từ Server nếu có -->
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger small mb-3" })
+
+                    <!-- 1. Họ tên: Không được chỉ toàn khoảng trắng, không bắt đầu bằng dấu cách -->
+                    <div class="form-floating mb-3">
+                        <input type="text" name="FullName" class="form-control" id="FullName"
+                               placeholder="Nguyễn Văn A"
+                               pattern="^\S.*$"
+                               title="Họ tên không được bắt đầu bằng khoảng trắng!" required />
+                        <label for="FullName">Họ và tên của bạn <span class="text-danger">*</span></label>
+                    </div>
+
+                    <!-- 2. Email: Bắt buộc bắt đầu bằng chữ cái (a-z, A-Z) và đúng định dạng email -->
+                    <div class="form-floating mb-3">
+                        <div class="form-floating mb-3">
+                            <input type="email" name="Email" class="form-control" id="Email" placeholder="Địa chỉ Email" required />
+                            <label for="Email">Địa chỉ Email <span class="text-danger">*</span></label>
+                        </div>
+
+
+                        <!-- 3. Mật khẩu: Ít nhất 6 ký tự, không được chứa khoảng trắng ở đầu hoặc cuối -->
+                        <div class="form-floating mb-3">
+                            <input type="password" name="PasswordHash" class="form-control" id="PasswordHash"
+                                   placeholder="Mật khẩu"
+                                   minlength="6"
+                                   pattern="^\S.{4,}\S$"
+                                   title="Mật khẩu phải từ 6 ký tự trở lên và không được có khoảng trắng ở đầu hoặc cuối!" required />
+                            <label for="PasswordHash">Mật khẩu (Ít nhất 6 ký tự) <span class="text-danger">*</span></label>
+                        </div>
+
+                        <!-- 4. Số điện thoại: Bắt buộc bắt đầu bằng số 0 và đủ 10 chữ số -->
+                        <div class="form-floating mb-3">
+                            <input type="tel" name="Phone" class="form-control" id="Phone"
+                                   placeholder="0912345678"
+                                   pattern="^0[0-9]{9}$"
+                                   title="Số điện thoại phải bắt đầu bằng số 0 và gồm đúng 10 chữ số!" required />
+                            <label for="Phone">Số điện thoại liên hệ (10 số) <span class="text-danger">*</span></label>
+                        </div>
+
+                        <!-- 5. Địa chỉ: Không được bắt đầu bằng khoảng trắng -->
+                        <div class="form-floating mb-4">
+                            <input type="text" name="Address" class="form-control" id="Address"
+                                   placeholder="Địa chỉ"
+                                   pattern="^\S.*$"
+                                   title="Địa chỉ giao hàng không được bắt đầu bằng khoảng trắng!" required />
+                            <label for="Address">Địa chỉ giao nhận hàng bách hóa <span class="text-danger">*</span></label>
+                        </div>
+
+                        <button class="btn btn-success text-uppercase fw-bold w-100 py-2" type="submit">
+                            Tạo tài khoản mới
+                        </button>
+
+                        <hr class="my-4">
+                        <div class="text-center">
+                            <a class="small text-decoration-none text-success" href="/Account/Login">Bạn đã có tài khoản? Đăng nhập ngay!</a>
+                        </div>
+</form>
+
+            </div>
+        </div>
+    </div>
+</div>
+

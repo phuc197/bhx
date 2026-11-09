@@ -1,0 +1,77 @@
+﻿@model bachhoaxanh.Models.User
+@{
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    ViewBag.Title = "Hồ sơ tài khoản - Bách Hóa Xanh";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card shadow-sm border-0 p-4">
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+                    <div>
+                        <h4 class="fw-bold text-success m-0">HỒ SƠ CÁ NHÂN CỦA BẠN</h4>
+                        <small class="text-muted">Quản lý thông tin tài khoản và địa chỉ nhận hàng mặc định</small>
+                    </div>
+                    <span class="badge @(Model.Role == "Admin" ? "bg-danger" : "bg-success") fs-6">
+                        @(Model.Role == "Admin" ? "Quản trị viên" : "Khách hàng")
+                    </span>
+                </div>
+
+                @if (TempData["ProfileSuccess"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show">
+                        @TempData["ProfileSuccess"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger">@ViewBag.Error</div>
+                }
+
+                <form action="/Account/Profile" method="POST">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Địa chỉ Email đăng nhập</label>
+                        <input type="text" class="form-control bg-light" value="@Model.Email" readonly />
+                        <small class="text-muted">Email dùng để đăng nhập cố định và không thể thay đổi.</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Họ và tên <span class="text-danger">*</span></label>
+                        <input type="text" name="fullName" class="form-control" value="@Model.FullName" pattern="^\S.*$" title="Họ tên không được bắt đầu bằng khoảng trắng" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Số điện thoại liên hệ <span class="text-danger">*</span></label>
+                        <input type="tel" name="phone" class="form-control" value="@Model.Phone" pattern="^0[0-9]{9}$" title="Số điện thoại bắt đầu bằng số 0 và gồm 10 chữ số" required />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Địa chỉ nhận hàng mặc định <span class="text-danger">*</span></label>
+                        <textarea name="address" class="form-control" rows="3" required>@Model.Address</textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <button type="submit" class="btn btn-success fw-bold px-4">Lưu thay đổi</button>
+                            <a href="/Account/ForgotPassword" class="btn btn-outline-warning text-dark fw-bold ms-2">Đổi mật khẩu</a>
+                        </div>
+
+                        @if (Model.Role == "Admin")
+                        {
+                            <a href="/Admin/Dashboard" class="btn btn-dark fw-bold">Về trang Quản trị &rarr;</a>
+                        }
+                        else
+                        {
+                            <a href="/Order/History" class="btn btn-outline-success fw-bold">Xem lịch sử đơn hàng &rarr;</a>
+                        }
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

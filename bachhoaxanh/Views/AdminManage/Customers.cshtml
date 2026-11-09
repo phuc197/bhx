@@ -1,0 +1,51 @@
+﻿@model IEnumerable<bachhoaxanh.Models.User>
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewBag.Title = "Quản lý khách hàng";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold text-dark m-0">DANH SÁCH KHÁCH HÀNG THÀNH VIÊN</h4>
+    <a href="/Admin/Dashboard" class="btn btn-outline-secondary fw-bold">&larr; Quay lại Tổng quan</a>
+</div>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>Mã KH</th>
+                <th class="text-start">Họ và tên</th>
+                <th class="text-start">Email</th>
+                <th>Số điện thoại</th>
+                <th class="text-start">Địa chỉ</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>#@item.UserID</td>
+                    <td class="text-start fw-bold">@item.FullName</td>
+                    <td class="text-start">@item.Email</td>
+                    <td>@item.Phone</td>
+                    <td class="text-start">@item.Address</td>
+                    <td>
+                        <a href="/AdminManage/CustomerDetails/@item.UserID" class="btn btn-info btn-sm text-white fw-bold">Chi tiết & Đơn hàng</a>
+                        <a href="/AdminManage/DeleteCustomer/@item.UserID" class="btn btn-danger btn-sm fw-bold ms-1" onclick="return confirm('Bạn có chắc chắn muốn xóa khách hàng này không?');">Xóa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

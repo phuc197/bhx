@@ -1,0 +1,64 @@
+﻿@model bachhoaxanh.Models.Product
+@{
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    ViewBag.Title = Model.ProductName;
+}
+
+<div class="container my-5">
+    <div class="card shadow-sm border-0 p-4">
+        <div class="row g-4 align-items-center">
+            <!-- Cột trái: Ảnh sản phẩm -->
+            <div class="col-md-5 text-center border-end">
+                <img src="~/Images/@Model.ImageURL" class="img-fluid rounded" style="max-height: 350px; object-fit: contain;" onerror="this.src='https://placehold.co'">
+            </div>
+
+            <!-- Cột phải: Thông tin chi tiết & Nút chọn số lượng mua -->
+            <div class="col-md-7 ps-md-4">
+                <span class="badge bg-success mb-2">@(Model.Category != null ? Model.Category.CategoryName : "Hàng Bách Hóa")</span>
+                <h2 class="fw-bold text-dark">@Model.ProductName</h2>
+
+                <div class="my-3 p-3 bg-light rounded">
+                    <span class="text-danger fw-bold display-6">@String.Format("{0:0,0}", Model.Price) đ</span>
+                    <span class="text-muted fs-5">/ @Model.Unit</span>
+                </div>
+
+                <ul class="list-unstyled mb-4">
+                    <li class="mb-2">
+                        <strong>Tình trạng:</strong>
+                        @if (Model.StockQuantity > 0)
+                        {
+                            <span class="text-success fw-bold">Còn hàng (@Model.StockQuantity @Model.Unit)</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger fw-bold">Tạm hết hàng</span>
+                        }
+                    </li>
+                    <li class="mb-2"><strong>Đã bán:</strong> @Model.SoldQuantity @Model.Unit</li>
+                    <li class="mb-2"><strong>Mô tả sản phẩm:</strong> @(string.IsNullOrEmpty(Model.Description) ? "Sản phẩm tươi sạch đạt chuẩn chất lượng Bách Hóa Xanh." : Model.Description)</li>
+                </ul>
+
+                <!-- Form truyền số lượng mua sang trang Giỏ hàng -->
+                @if (Model.StockQuantity > 0)
+                {
+                    <form action="/Cart/AddToCart" method="GET" class="row g-3 align-items-center">
+                        <input type="hidden" name="id" value="@Model.ProductID" />
+
+                        <div class="col-auto">
+                            <label class="col-form-label fw-bold">Số lượng mua:</label>
+                        </div>
+                        <div class="col-auto">
+                            <!-- Không cho nhập nhỏ hơn 1 và lớn hơn số lượng tồn kho -->
+                            <input type="number" name="quantity" class="form-control text-center fw-bold" value="1" min="1" max="@Model.StockQuantity" style="width: 90px;" required />
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-success btn-lg fw-bold px-4">
+                                <i class="fa-solid fa-cart-plus me-2"></i>THÊM VÀO GIỎ HÀNG
+                            </button>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>

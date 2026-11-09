@@ -1,0 +1,26 @@
+﻿@model bachhoaxanh.Models.Product
+
+<div class="card shadow-sm border-0 p-4">
+    <div class="row g-4 align-items-center">
+        <div class="col-md-5 text-center border-end">
+            <img src="~/Images/@Model.ImageURL" class="img-fluid rounded" style="max-height: 320px; object-fit: contain;" />
+        </div>
+
+        <div class="col-md-7 ps-md-4">
+            <span class="badge bg-success mb-2">@(Model.Category != null ? Model.Category.CategoryName : "Hàng Bách Hóa")</span>
+            <h3 class="fw-bold text-dark">@Model.ProductName</h3>
+
+            <div class="my-3 p-3 bg-light rounded">
+                <span class="text-danger fw-bold fs-2">@String.Format("{0:0,0}", Model.Price) đ</span>
+                <span class="text-muted fs-5">/ @Model.Unit</span>
+            </div>
+
+            <ul class="list-unstyled mb-3">
+                <li class="mb-2"><strong>Tồn kho hiện tại:</strong> <span class="fw-bold text-success">@Model.StockQuantity @Model.Unit</span></li>
+                <li class="mb-2"><strong>Tổng số đã bán:</strong> <span class="fw-bold text-primary">@Model.SoldQuantity @Model.Unit</span></li>
+                <li class="mb-2"><strong>Trạng thái:</strong> @(Model.IsActive == true ? "Đang mở bán" : "Đã ngừng kinh doanh")</li>
+                <li class="mb-2"><strong>Mô tả sản phẩm:</strong> @(string.IsNullOrEmpty(Model.Description) ? "Sản phẩm tươi sạch đạt chuẩn chất lượng Bách Hóa Xanh." : Model.Description)</li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+﻿@model bachhoaxanh.Models.User
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewBag.Title = "Hồ sơ khách hàng";
+    var orders = ViewBag.CustomerOrders as List<bachhoaxanh.Models.Order>;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold text-dark m-0">HỒ SƠ CHI TIẾT KHÁCH HÀNG</h4>
+    <a href="/AdminManage/Customers" class="btn btn-outline-secondary">Quay lại danh sách</a>
+</div>
+
+<div class="card bg-light border-0 p-4 mb-4">
+    <div class="row">
+        <div class="col-md-6">
+            <p class="mb-2"><strong>Họ và tên:</strong> @Model.FullName</p>
+            <p class="mb-0"><strong>Địa chỉ Email:</strong> @Model.Email</p>
+        </div>
+        <div class="col-md-6">
+            <p class="mb-2"><strong>Số điện thoại:</strong> @Model.Phone</p>
+            <p class="mb-0"><strong>Địa chỉ mặc định:</strong> @Model.Address</p>
+        </div>
+    </div>
+</div>
+
+<!-- Nhúng Partial View danh sách đơn hàng của khách này theo đúng Checklist nâng cao -->
+@Html.Partial("_CustomerOrdersPartial", orders)

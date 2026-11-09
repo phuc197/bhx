@@ -1,0 +1,27 @@
+﻿@model bachhoaxanh.Models.Category
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewBag.Title = "Thêm danh mục mới";
+}
+
+<div class="container-fluid py-3" style="max-width: 600px;">
+    <h4 class="fw-bold text-success mb-4 border-bottom pb-2">THÊM DANH MỤC HÀNG HÓA MỚI</h4>
+
+    <form action="/AdminCategory/Create" method="POST">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Tên danh mục <span class="text-danger">*</span></label>
+            <input type="text" name="CategoryName" class="form-control" placeholder="Ví dụ: Sữa & Sản phẩm từ sữa" required />
+            @Html.ValidationMessage("CategoryName", "", new { @class = "text-danger small" })
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label fw-bold">Mô tả ngắn gọn</label>
+            <textarea name="Description" class="form-control" rows="3" placeholder="Sữa tươi, sữa chua, phô mai các loại..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success fw-bold px-4">Lưu danh mục</button>
+        <a href="/AdminCategory/Index" class="btn btn-outline-secondary ms-2">Quay lại</a>
+    </form>
+</div>

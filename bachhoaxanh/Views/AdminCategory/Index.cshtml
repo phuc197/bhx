@@ -1,0 +1,52 @@
+﻿@model IEnumerable<bachhoaxanh.Models.Category>
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewBag.Title = "Quản lý danh mục";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold text-dark m-0">DANH SÁCH NHÓM HÀNG (DANH MỤC)</h4>
+    <a href="/AdminCategory/Create" class="btn btn-success fw-bold">+ Thêm danh mục mới</a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>Mã</th>
+                <th class="text-start">Tên danh mục</th>
+                <th class="text-start">Mô tả</th>
+                <th>Tổng số hàng hóa</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>#@item.CategoryID</td>
+                    <td class="text-start fw-bold text-success">@item.CategoryName</td>
+                    <td class="text-start text-muted">@item.Description</td>
+                    <td>
+                        <!-- Điểm nâng cao: Hiển thị tổng số lượng hàng hóa thuộc danh mục -->
+                        <span class="badge bg-primary fs-6">@(item.Products != null ? item.Products.Count : 0) sản phẩm</span>
+                    </td>
+                    <td>
+                        <a href="/AdminCategory/Details/@item.CategoryID" class="btn btn-info btn-sm text-white">Chi tiết</a>
+                        <a href="/AdminCategory/Edit/@item.CategoryID" class="btn btn-warning btn-sm">Sửa</a>
+                        <a href="/AdminCategory/Delete/@item.CategoryID" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">Xóa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

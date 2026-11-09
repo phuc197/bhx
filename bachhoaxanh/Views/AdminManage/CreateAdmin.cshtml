@@ -1,0 +1,37 @@
+﻿@model bachhoaxanh.Models.User
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewBag.Title = "Thêm quản trị viên";
+}
+
+<div class="container-fluid py-3" style="max-width: 600px;">
+    <h4 class="fw-bold text-success mb-4 border-bottom pb-2">THÊM TÀI KHOẢN QUẢN TRỊ VIÊN</h4>
+
+    <form action="/AdminManage/CreateAdmin" method="POST">
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(false, "", new { @class = "text-danger small mb-3" })
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Họ và tên <span class="text-danger">*</span></label>
+            <input type="text" name="FullName" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Email đăng nhập <span class="text-danger">*</span></label>
+            <input type="email" name="Email" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Mật khẩu <span class="text-danger">*</span></label>
+            <input type="password" name="PasswordHash" class="form-control" minlength="6" required />
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label fw-bold">Số điện thoại</label>
+            <input type="text" name="Phone" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-success fw-bold px-4">Tạo tài khoản Admin</button>
+        <a href="/AdminManage/Admins" class="btn btn-outline-secondary ms-2">Quay lại</a>
+    </form>
+</div>

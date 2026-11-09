@@ -1,0 +1,47 @@
+﻿@model bachhoaxanh.Models.Category
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewBag.Title = "Chi tiết danh mục";
+    var products = ViewBag.ProductsInCategory as List<bachhoaxanh.Models.Product>;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="fw-bold text-success m-0">DANH MỤC: @Model.CategoryName.ToUpper()</h4>
+        <small class="text-muted">@Model.Description</small>
+    </div>
+    <a href="/AdminCategory/Index" class="btn btn-outline-secondary">Quay lại danh sách</a>
+</div>
+
+<h6 class="fw-bold mb-3">Danh sách sản phẩm thuộc nhóm hàng này (@(products != null ? products.Count : 0) món):</h6>
+
+<div class="table-responsive">
+    <table class="table table-bordered align-middle text-center">
+        <thead class="table-light">
+            <tr>
+                <th>Ảnh</th>
+                <th class="text-start">Tên sản phẩm</th>
+                <th>Giá bán</th>
+                <th>Tồn kho</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (products != null && products.Any())
+            {
+                foreach (var p in products)
+                {
+                    <tr>
+                        <td><img src="~/Images/@p.ImageURL" style="width: 45px; height: 45px; object-fit: contain;" /></td>
+                        <td class="text-start fw-bold">@p.ProductName</td>
+                        <td class="text-danger fw-bold">@String.Format("{0:0,0}", p.Price) đ / @p.Unit</td>
+                        <td>@p.StockQuantity @p.Unit</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr><td colspan="4" class="text-muted py-3">Chưa có sản phẩm nào trong danh mục này.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

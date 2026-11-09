@@ -1,0 +1,83 @@
+﻿@model IEnumerable<bachhoaxanh.Models.Order>
+@{
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    ViewBag.Title = "Lịch sử giao dịch";
+}
+
+<div class="container my-5">
+    <h3 class="fw-bold text-success mb-4 border-bottom pb-2">
+        <i class="fa-solid fa-clock-rotate-left me-2"></i>LỊCH SỬ MUA HÀNG CỦA BẠN
+    </h3>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center py-5">
+            <h5>Bạn chưa có đơn hàng nào tại Bách Hóa Xanh!</h5>
+            <a href="/" class="btn btn-success mt-2">Bắt đầu mua sắm ngay</a>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm border-0 p-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+                    <thead class="table-success">
+                        <tr>
+                            <th>Mã đơn</th>
+                            <th>Ngày đặt hàng</th>
+                            <th class="text-start">Địa chỉ giao</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold">#@item.OrderID</td>
+                                <td>@String.Format("{0:dd/MM/yyyy HH:mm}", item.OrderDate)</td>
+                                <td class="text-start">@item.ShippingAddress</td>
+                                <td class="text-danger fw-bold">@String.Format("{0:0,0}", item.TotalAmount) đ</td>
+                                <td><span class="badge bg-warning text-dark">@item.Status</span></td>
+                                <td>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="/Order/OrderDetail/@item.OrderID" class="btn btn-outline-success btn-sm fw-bold">
+                                            Xem hóa đơn
+                                        </a>
+
+                                        @if (item.Status == "Chờ xử lý")
+                                        {
+                                            <form action="/Order/CancelOrder/@item.OrderID" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng #@item.OrderID này không?');">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-outline-danger btn-sm fw-bold">
+                                                    Hủy đơn
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

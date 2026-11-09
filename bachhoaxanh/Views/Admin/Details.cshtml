@@ -1,0 +1,16 @@
+﻿@model bachhoaxanh.Models.Product
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewBag.Title = "Chi tiết sản phẩm";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold text-dark m-0">CHI TIẾT THÔNG TIN HÀNG HÓA</h4>
+    <div>
+        <a href="/Admin/Edit/@Model.ProductID" class="btn btn-warning fw-bold">Chỉnh sửa</a>
+        <a href="/Admin/Index" class="btn btn-outline-secondary ms-2">Quay lại danh sách</a>
+    </div>
+</div>
+
+<!-- Nhúng Partial View giao diện chuẩn khách hàng xem (không có nút Mua) -->
+@Html.Partial("_ProductDetailPartial", Model)

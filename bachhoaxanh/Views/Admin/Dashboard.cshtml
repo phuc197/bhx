@@ -1,0 +1,64 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewBag.Title = "Tổng quan hệ thống";
+}
+
+<style>
+    .stat-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15) !important;
+        }
+</style>
+
+<h4 class="fw-bold text-dark mb-4">TỔNG QUAN HỆ THỐNG BÁCH HÓA XANH</h4>
+
+<div class="row g-4">
+    <!-- 1. Thẻ Tổng doanh thu -> Nhảy sang Quản lý đơn hàng -->
+    <div class="col-md-3">
+        <a href="/AdminManage/Orders" class="text-decoration-none">
+            <div class="card text-white bg-success shadow-sm border-0 p-3 stat-card h-100">
+                <h6 class="text-uppercase small fw-bold">Tổng doanh thu</h6>
+                <h3 class="fw-bold my-1">@String.Format("{0:0,0}", ViewBag.TotalRevenue) đ</h3>
+                <small class="text-white-50">Xem chi tiết doanh thu &rarr;</small>
+            </div>
+        </a>
+    </div>
+
+    <!-- 2. Thẻ Tổng đơn hàng -> Nhảy sang Quản lý đơn hàng -->
+    <div class="col-md-3">
+        <a href="/AdminManage/Orders" class="text-decoration-none">
+            <div class="card text-white bg-primary shadow-sm border-0 p-3 stat-card h-100">
+                <h6 class="text-uppercase small fw-bold">Tổng đơn hàng</h6>
+                <h3 class="fw-bold my-1">@ViewBag.TotalOrders đơn</h3>
+                <small class="text-white-50">Xem danh sách đơn &rarr;</small>
+            </div>
+        </a>
+    </div>
+
+    <!-- 3. Thẻ Mặt hàng đang bán -> Nhảy sang Danh sách sản phẩm -->
+    <div class="col-md-3">
+        <a href="/AdminProduct/Index" class="text-decoration-none">
+            <div class="card text-dark bg-warning shadow-sm border-0 p-3 stat-card h-100">
+                <h6 class="text-uppercase small fw-bold">Mặt hàng đang bán</h6>
+                <h3 class="fw-bold my-1">@ViewBag.TotalProducts sản phẩm</h3>
+                <small class="text-dark-50">Quản lý hàng hóa &rarr;</small>
+            </div>
+        </a>
+    </div>
+
+    <!-- 4. Thẻ Khách hàng thành viên -> Nhảy sang Quản lý khách hàng -->
+    <div class="col-md-3">
+        <a href="/AdminManage/Customers" class="text-decoration-none">
+            <div class="card text-white bg-info shadow-sm border-0 p-3 stat-card h-100">
+                <h6 class="text-uppercase small fw-bold">Khách hàng thành viên</h6>
+                <h3 class="fw-bold my-1">@ViewBag.TotalCustomers khách</h3>
+                <small class="text-white-50">Xem danh sách khách &rarr;</small>
+            </div>
+        </a>
+    </div>
+</div>

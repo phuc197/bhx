@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="52a0c9af07f54f7288fae945db6605d7" Name="Diagram1" ZoomLevel="71">
+        <EntityTypeShape EntityType="BachHoaXanhDBModel.Category" Width="1.5" PointX="0.75" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="BachHoaXanhDBModel.OrderDetail" Width="1.5" PointX="5.25" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="BachHoaXanhDBModel.Order" Width="1.5" PointX="7.625" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="BachHoaXanhDBModel.Product" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="BachHoaXanhDBModel.User" Width="1.5" PointX="5.375" PointY="4.875" IsExpanded="true" />
+        <AssociationConnector Association="BachHoaXanhDBModel.FK__Products__Catego__4CA06362" ManuallyRouted="false" />
+        <AssociationConnector Association="BachHoaXanhDBModel.FK__OrderDeta__Order__59063A47" ManuallyRouted="false" />
+        <AssociationConnector Association="BachHoaXanhDBModel.FK__OrderDeta__Produ__59FA5E80" ManuallyRouted="false" />
+        <AssociationConnector Association="BachHoaXanhDBModel.FK__Orders__UserID__5441852A" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

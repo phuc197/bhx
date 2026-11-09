@@ -1,0 +1,62 @@
+﻿@model IEnumerable<bachhoaxanh.Models.Product>
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml"; // Sửa lại đúng tên file layout Admin của bạn
+    ViewBag.Title = "Quản lý hàng hóa";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold text-dark m-0">DANH SÁCH HÀNG HÓA BÁCH HÓA</h4>
+    <a href="/Admin/Create" class="btn btn-success fw-bold">
+        + Thêm sản phẩm mới
+    </a>
+</div>
+
+@if (TempData["AdminMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["AdminMessage"]</div>
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>Hình ảnh</th>
+                <th class="text-start">Tên sản phẩm</th>
+                <th>Chủng loại</th>
+                <th>Giá bán</th>
+                <th>Tồn kho</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <img src="~/Images/@item.ImageURL" style="width: 55px; height: 55px; object-fit: contain;" />
+                    </td>
+                    <td class="text-start fw-bold">@item.ProductName</td>
+                    <td>@(item.Category != null ? item.Category.CategoryName : "")</td>
+                    <td class="text-danger fw-bold">@String.Format("{0:0,0}", item.Price) đ / @item.Unit</td>
+                    <td>
+                        @if (item.StockQuantity > 0)
+                        {
+                            <span class="badge bg-success">@item.StockQuantity @item.Unit</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Hết hàng (0)</span>
+                        }
+                    </td>
+                    <!-- Thêm vào trong thẻ <thead><tr> -->
+                    <td>
+                        <a href="/Admin/Details/@item.ProductID" class="btn btn-info btn-sm text-white">Chi tiết</a>
+                        <a href="/Admin/Edit/@item.ProductID" class="btn btn-warning btn-sm">Sửa</a>
+                        <a href="/Admin/Delete/@item.ProductID" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?');">Xóa</a>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

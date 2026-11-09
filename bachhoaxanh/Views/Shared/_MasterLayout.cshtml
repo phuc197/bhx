@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - Bách Hóa Xanh Online</title>
+
+    <!-- Link Bootstrap 5 & FontAwesome chuẩn -->
+    <!-- Dùng thẳng file Bootstrap 5.2.3 có sẵn trong máy bạn -->
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Nhúng FontAwesome đầy đủ để làm Icon -->
+    <link rel="stylesheet" href="https://cloudflare.com" />
+
+
+    <style>
+        .bg-bhx {
+            background-color: #008848;
+        }
+
+        .text-bhx {
+            color: #ffc107;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <!-- Thanh thông báo trên cùng -->
+        <div class="bg-dark text-white text-center py-1 small">
+            Chào mừng bạn đến với Hệ thống Siêu thị Bách Hóa Xanh
+        </div>
+
+        <!-- Thanh Menu chính điều hướng -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-bhx shadow-sm">
+            <div class="container">
+                <!-- Logo -->
+                <a class="navbar-brand fw-bold text-warning" href="/">
+                    <i class="fa-solid fa-leaf me-2"></i>BáchHóaXanh
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <!-- Menu Danh mục Sản phẩm (Động) -->
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/">Trang chủ</a>
+                        </li>
+                        <!-- Thầy cô chấm điểm mục CUSTOMER - Home: Menu lấy theo Category -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                Danh mục sản phẩm
+                            </a>
+                            <ul class="dropdown-menu">
+                                @if (ViewBag.Categories != null)
+                                {
+                                    foreach (var cat in ViewBag.Categories)
+                                    {
+                                        <!-- Dẫn tới trang lọc sản phẩm theo danh mục -->
+                                        <li>
+                                            <a class="dropdown-item text-dark text-decoration-none" href="/Product/Category/@cat.CategoryID">
+                                                @cat.CategoryName
+                                            </a>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <!-- Ô tìm kiếm sản phẩm (Đáp ứng mục Product Category: Chức năng tìm kiếm) -->
+                    <form class="d-flex mx-auto w-50" action="/Product/Search" method="GET">
+                        <input class="form-control me-2" type="search" name="keyword" placeholder="Tìm thịt cá, rau củ, mì tôm..." required>
+                        <button class="btn btn-warning text-dark fw-bold d-flex align-items-center justify-content-center" type="submit" title="Tìm kiếm">
+                            <svg xmlns="http://w3.org" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                            </svg>
+                        </button>
+
+                    </form>
+
+                    <!-- Cụm Giỏ hàng & Đăng nhập phía bên phải -->
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <!-- Icon giỏ hàng hiển thị số lượng số món -->
+                        <li class="nav-item me-3 position-relative">
+                            <a class="nav-link text-white fs-5" href="/Cart">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count">
+                                    @(Session["CartCount"] != null ? Session["CartCount"] : 0)
+                                </span>
+                            </a>
+                        </li>
+
+                        <!-- Cụm Đăng ký / Đăng nhập động dựa trên Session của tài khoản -->
+                        <li class="nav-item dropdown">
+                            @if (Session["UserFullName"] != null)
+                            {
+                                <!-- [ĐÃ ĐĂNG NHẬP]: Đổi icon, hiển thị tên người dùng và mở menu ẩn -->
+                                <a class="nav-link text-warning dropdown-toggle fw-bold" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="fa-solid fa-user-check me-1"></i> @Session["UserFullName"]
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    @if (Session["UserRole"] != null && Session["UserRole"].ToString() == "Admin")
+                                    {
+                                        <li><a class="dropdown-item fw-bold text-primary" href="/Admin/Dashboard">Trang Quản trị Admin</a></li>
+                                        <li class="dropdown-divider"></li>
+                                    }
+                                    <li><a class="dropdown-item" href="/Account/Profile">Hồ sơ khách hàng</a></li>
+                                    <li><a class="dropdown-item" href="/Order/History">Lịch sử giao dịch</a></li>
+                                    <li class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="/Account/Logout">Đăng xuất</a></li>
+                                </ul>
+
+                            }
+                            else
+                            {
+                                <!-- [CHƯA ĐĂNG NHẬP]: Hiện nguyên bản 2 nút Đăng nhập / Đăng ký -->
+                                <a class="nav-link text-white dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="fa-solid fa-user me-1"></i> Tài khoản
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="/Account/Login"><i class="fa-solid fa-right-to-bracket me-2"></i>Đăng nhập</a></li>
+                                    <li><a class="dropdown-item" href="/Account/Register"><i class="fa-solid fa-user-plus me-2"></i>Đăng ký</a></li>
+                                </ul>
+                            }
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Nơi chứa nội dung thay đổi theo từng trang con (Trang chủ, Chi tiết, Giỏ hàng...) -->
+    <main role="main" class="container my-4" style="min-height: 70vh;">
+        @RenderBody()
+    </main>
+
+    <!-- Phần Chân trang (Footer) -->
+    <footer class="border-top footer text-muted bg-light py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-1 fw-bold text-success">&copy; 2026 - Website Mô Phỏng Bách Hóa Xanh - Đồ án thực tập</p>
+            <small>Sử dụng ASP.NET MVC, Entity Framework và Thư viện Bootstrap UI</small>
+        </div>
+    </footer>
+
+
+    <!-- Nhúng Bootstrap JavaScript -->
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
