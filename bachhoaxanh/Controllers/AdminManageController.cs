@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using bachhoaxanh.Models; // Đảm bảo khớp namespace dự án của bạn
+using bachhoaxanh.Models; 
 
 namespace bachhoaxanh.Controllers
 {

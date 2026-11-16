@@ -157,26 +157,22 @@ namespace bachhoaxanh.Controllers
             var product = db.Products.Find(id);
             if (product != null)
             {
-                // Kiểm tra xem sản phẩm đã từng xuất hiện trong hóa đơn nào chưa
-                bool isOrdered = db.OrderDetails.Any(od => od.ProductID == id);
-                if (isOrdered)
+                // 1. Xóa tất cả các dòng chi tiết hóa đơn cũ có dính tới sản phẩm này để không bị lỗi khóa ngoại
+                var oldOrderDetails = db.OrderDetails.Where(od => od.ProductID == id).ToList();
+                if (oldOrderDetails.Any())
                 {
-                    // Chặn xóa vĩnh viễn để bảo vệ lịch sử hóa đơn, chuyển sang ngừng bán
-                    product.IsActive = false;
-                    product.StockQuantity = 0;
-                    db.SaveChanges();
-                    TempData["SuccessMessage"] = "Sản phẩm đã có lịch sử giao dịch nên hệ thống đã chuyển sang trạng thái Ngừng kinh doanh (ẩn khỏi trang khách)!";
+                    db.OrderDetails.RemoveRange(oldOrderDetails);
                 }
-                else
-                {
-                    // Chưa có ai mua thì cho phép xóa hoàn toàn khỏi SQL
-                    db.Products.Remove(product);
-                    db.SaveChanges();
-                    TempData["SuccessMessage"] = "Đã xóa vĩnh viễn sản phẩm khỏi hệ thống!";
-                }
+
+                // 2. Xóa vĩnh viễn sản phẩm khỏi bảng Products
+                db.Products.Remove(product);
+                db.SaveChanges();
+
+                TempData["SuccessMessage"] = "Đã xóa vĩnh viễn sản phẩm khỏi hệ thống!";
             }
             return RedirectToAction("Index");
         }
+
 
         protected override void Dispose(bool disposing)
         {

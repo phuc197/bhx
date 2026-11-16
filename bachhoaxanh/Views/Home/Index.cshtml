@@ -1,68 +1,142 @@
 ﻿@model IEnumerable<bachhoaxanh.Models.Product>
 @{
     Layout = "~/Views/Shared/_MasterLayout.cshtml";
-    ViewData["Title"] = "Siêu thị Bách Hóa Xanh Online - Mua sắm tươi ngon mỗi ngày";
+    ViewBag.Title = "Siêu thị Bách Hóa Xanh Online - Mua sắm tươi ngon mỗi ngày";
 }
 
-<!-- Banner quảng cáo phong cách Bách Hóa Xanh -->
-<div class="p-5 mb-4 bg-light rounded-3 shadow-sm" style="background: linear-gradient(135deg, #008848 0%, #006a37 100%); color: white;">
-    <div class="container-fluid py-3">
-        <h1 class="display-5 fw-bold text-warning"><i class="fa-solid fa-basket-shopping me-2"></i>Đi Chợ Online</h1>
-        <p class="col-md-8 fs-4 text-white-50">Thực phẩm tươi sống, rau củ sạch, giao hàng nhanh chóng tận cửa nhà bạn.</p>
-        <a class="btn btn-warning btn-lg text-dark fw-bold" href="/Product/Category">
-            <i class="fa-solid fa-bolt me-1"></i>Mua ngay hôm nay
-        </a>
+<style>
+    .product-card {
+        transition: all 0.2s ease;
+        border: 1px solid #eee !important;
+    }
 
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 15px rgba(0,136,72,0.15) !important;
+            border-color: #008848 !important;
+        }
+
+    .quick-badge {
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 6px;
+        font-weight: bold;
+        font-size: 13px;
+    }
+</style>
+
+<!-- 1. BANNER KHUYẾN MÃI CHÍNH -->
+<div class="p-4 mb-3 rounded-3 shadow-sm text-white" style="background: linear-gradient(135deg, #008848 0%, #00a859 100%);">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <span class="badge bg-warning text-dark fw-bold mb-2">GIAO NHANH TRONG 2 GIỜ</span>
+            <h2 class="fw-bold text-warning mb-2">Đi Chợ Online Tươi Ngon Mỗi Ngày</h2>
+            <p class="mb-3 text-white-50">Rau củ sạch VietGAP, thịt cá tươi sống chuẩn nguồn gốc, hoàn tiền nếu không hài lòng.</p>
+            <a class="btn btn-warning text-dark fw-bold px-4 rounded-pill shadow-sm" href="/Product/Category">
+                MUA NGAY HÔM NAY &rarr;
+            </a>
+        </div>
+        <div class="col-md-4 text-center d-none d-md-block">
+            <div class="bg-white text-success rounded-circle d-inline-flex flex-column justify-content-center align-items-center shadow" style="width: 130px; height: 130px;">
+                <span class="small fw-bold">GIẢM ĐẾN</span>
+                <span class="display-6 fw-bold text-danger">50%</span>
+                <span class="small fw-bold">HÀNG TƯƠI</span>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Vùng hiển thị danh sách sản phẩm -->
-<div class="container my-5" id="san-pham">
-    <h3 class="fw-bold text-success mb-4 border-bottom pb-2">
-        <i class="fa-solid fa-fire text-danger me-2"></i>SẢN PHẨM TƯƠI SỐNG ĐANG BÁN
-    </h3>
+<!-- 2. DẢI ICON TIỆN ÍCH NHANH (GIỐNG THANH TRÊN CÙNG TRANG BHX THẬT) -->
+<div class="card border-0 shadow-sm p-3 mb-4">
+    <div class="row row-cols-3 row-cols-sm-6 g-2 text-center">
+        <div class="col">
+            <a href="/Product/Category" class="text-decoration-none text-dark">
+                <div class="quick-badge bg-danger text-white shadow-sm">SALE</div>
+                <div class="small fw-semibold">Khuyến mãi</div>
+            </a>
+        </div>
+        <div class="col">
+            <a href="/Product/Category?priceFilter=duoi-50k" class="text-decoration-none text-dark">
+                <div class="quick-badge bg-warning text-dark shadow-sm">&lt;50K</div>
+                <div class="small fw-semibold">Giá tiết kiệm</div>
+            </a>
+        </div>
+        <div class="col">
+            <a href="/Product/Category" class="text-decoration-none text-dark">
+                <div class="quick-badge bg-success text-white shadow-sm">TƯƠI</div>
+                <div class="small fw-semibold">Rau củ sạch</div>
+            </a>
+        </div>
+        <div class="col">
+            <a href="/Product/Category" class="text-decoration-none text-dark">
+                <div class="quick-badge bg-info text-white shadow-sm">SỮA</div>
+                <div class="small fw-semibold">Sữa các loại</div>
+            </a>
+        </div>
+        <div class="col">
+            <a href="/Product/Category?priceFilter=50k-150k" class="text-decoration-none text-dark">
+                <div class="quick-badge bg-primary text-white shadow-sm">THỊT</div>
+                <div class="small fw-semibold">Thịt cá tươi</div>
+            </a>
+        </div>
+        <div class="col">
+            <a href="/Order/History" class="text-decoration-none text-dark">
+                <div class="quick-badge bg-secondary text-white shadow-sm">ĐƠN</div>
+                <div class="small fw-semibold">Đơn của bạn</div>
+            </a>
+        </div>
+    </div>
+</div>
 
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+<!-- 3. KHU VỰC HÔM NAY ĂN GÌ / SẢN PHẨM TƯƠI SỐNG -->
+<div class="card border-0 shadow-sm p-3 mb-4">
+    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+        <div>
+            <h5 class="fw-bold text-success m-0">SẢN PHẨM TƯƠI SỐNG ĐANG BÁN</h5>
+            <small class="text-muted">(Hàng tươi sống không hài lòng 1 đổi 2)</small>
+        </div>
+        <a href="/Product/Category" class="btn btn-outline-success btn-sm fw-bold rounded-pill">Xem tất cả &rsaquo;</a>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
         @foreach (var item in Model)
         {
             <div class="col">
-                <div class="card h-100 shadow-sm border-0 position-relative">
-                    <!-- Nhãn đơn vị tính (kg, bó, chai...) góc ảnh -->
-                    <span class="position-absolute top-0 start-0 badge bg-danger m-2 px-2 py-1 small">
-                        ĐVT: @item.Unit
+                <div class="card h-100 product-card position-relative">
+                    <!-- Nhãn đơn vị tính -->
+                    <span class="position-absolute top-0 start-0 badge bg-danger m-2 small">
+                        @item.Unit
                     </span>
 
-                    <!-- Ảnh sản phẩm bách hóa -->
+                    <!-- Ảnh sản phẩm -->
                     <a href="/Product/Detail/@item.ProductID" class="text-decoration-none">
-                        <img src="~/Images/@item.ImageURL" class="card-img-top p-3 img-fluid" style="height: 180px; object-fit: contain;" alt="@item.ProductName">
+                        <img src="~/Images/@item.ImageURL" class="card-img-top p-3 img-fluid" style="height: 165px; object-fit: contain;" alt="@item.ProductName">
                     </a>
 
-                    <div class="card-body d-flex flex-column justify-content-between text-center">
+                    <div class="card-body d-flex flex-column justify-content-between p-2 text-center">
                         <div>
-                            <!-- Tên sản phẩm -->
                             <a href="/Product/Detail/@item.ProductID" class="text-decoration-none text-dark">
-                                <h6 class="card-title fw-bold text-truncate" title="@item.ProductName">
+                                <h6 class="card-title fw-bold text-truncate mb-1" title="@item.ProductName">
                                     @item.ProductName
                                 </h6>
                             </a>
-                            <!-- Giá bán được format tiền Việt Nam -->
+
                             <p class="text-danger fw-bold fs-5 mb-1">
                                 @String.Format("{0:0,0}", item.Price) đ
                             </p>
-                            <!-- Số lượng tồn thực tế phục vụ kiểm tra hiển thị -->
-                            <small class="text-muted d-block mb-3">
-                                <i class="fa-solid fa-boxes-stacked me-1"></i>Còn lại: <span class="fw-bold text-success">@item.StockQuantity</span> @item.Unit
+
+                            <small class="text-muted d-block mb-2" style="font-size: 12px;">
+                                Còn lại: <strong class="text-success">@item.StockQuantity</strong> @item.Unit
                             </small>
                         </div>
 
-                        <div class="d-grid gap-2">
-                            <!-- Nút Xem chi tiết sản phẩm theo checklist -->
-                            <a href="/Product/Detail/@item.ProductID" class="btn btn-outline-success btn-sm fw-bold">
-                                <i class="fa-solid fa-eye me-1"></i>Xem chi tiết
-                            </a>
-                            <!-- Nút MUA sản phẩm chuyển thẳng vào giỏ hàng -->
-                            <a href="/Cart/AddToCart?id=@item.ProductID&quantity=1" class="btn btn-success btn-sm fw-bold">
-                                <i class="fa-solid fa-cart-plus me-1"></i>CHỌN MUA
+                        <div class="d-grid gap-1">
+                            <a href="/Cart/AddToCart?id=@item.ProductID&quantity=1" class="btn btn-outline-success btn-sm fw-bold">
+                                MUA NGAY
                             </a>
                         </div>
                     </div>

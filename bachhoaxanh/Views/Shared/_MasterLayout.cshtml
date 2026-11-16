@@ -31,112 +31,219 @@
             Chào mừng bạn đến với Hệ thống Siêu thị Bách Hóa Xanh
         </div>
 
-        <!-- Thanh Menu chính điều hướng -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-bhx shadow-sm">
-            <div class="container">
-                <!-- Logo -->
-                <a class="navbar-brand fw-bold text-warning" href="/">
-                    <i class="fa-solid fa-leaf me-2"></i>BáchHóaXanh
-                </a>
+        <!-- 1. TOP HEADER XANH LÁ ĐẶC TRƯNG -->
+        <header style="background-color: #008848;" class="sticky-top shadow-sm">
+            <div class="container py-2">
+                <div class="row align-items-center g-2">
+                    <!-- Logo Bách Hóa Xanh -->
+                    <div class="col-md-3 col-6">
+                        <a href="/" class="text-decoration-none d-flex align-items-center">
+                            <span class="bg-warning text-success fw-bold px-2 py-1 rounded me-2 fs-5">BHX</span>
+                            <div>
+                                <div class="text-warning fw-bold fs-5 lh-1">Bách hóa <span class="text-white">XANH</span></div>
+                                <small class="text-white-50" style="font-size: 11px;">Siêu thị tươi ngon mỗi ngày</small>
+                            </div>
+                        </a>
+                    </div>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                    <!-- Thanh tìm kiếm bo tròn ở giữa -->
+                    <div class="col-md-5 col-12 order-3 order-md-2">
+                        <form action="/Product/Search" method="GET" class="d-flex bg-white rounded-pill p-1 shadow-sm">
+                            <input type="text" name="keyword" class="form-control border-0 rounded-pill ps-3 shadow-none" placeholder="Tìm thịt cá, rau củ, sữa tươi..." value="@ViewBag.Keyword" />
+                            <button type="submit" class="btn btn-warning rounded-pill px-3 fw-bold d-flex align-items-center">
+                                <svg xmlns="http://w3.org" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <!-- Menu Danh mục Sản phẩm (Động) -->
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/">Trang chủ</a>
-                        </li>
-                        <!-- Thầy cô chấm điểm mục CUSTOMER - Home: Menu lấy theo Category -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                Danh mục sản phẩm
-                            </a>
-                            <ul class="dropdown-menu">
-                                @if (ViewBag.Categories != null)
-                                {
-                                    foreach (var cat in ViewBag.Categories)
-                                    {
-                                        <!-- Dẫn tới trang lọc sản phẩm theo danh mục -->
-                                        <li>
-                                            <a class="dropdown-item text-dark text-decoration-none" href="/Product/Category/@cat.CategoryID">
-                                                @cat.CategoryName
-                                            </a>
-                                        </li>
-                                    }
-                                }
-                            </ul>
-                        </li>
-                    </ul>
-
-                    <!-- Ô tìm kiếm sản phẩm (Đáp ứng mục Product Category: Chức năng tìm kiếm) -->
-                    <form class="d-flex mx-auto w-50" action="/Product/Search" method="GET">
-                        <input class="form-control me-2" type="search" name="keyword" placeholder="Tìm thịt cá, rau củ, mì tôm..." required>
-                        <button class="btn btn-warning text-dark fw-bold d-flex align-items-center justify-content-center" type="submit" title="Tìm kiếm">
-                            <svg xmlns="http://w3.org" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                    <!-- Cụm Giỏ hàng & Tài khoản bên phải -->
+                    <div class="col-md-4 col-6 order-2 order-md-3 d-flex justify-content-end align-items-center gap-3">
+                        <!-- Nút Giỏ hàng -->
+                        <a href="/Cart" class="btn btn-success border-light text-white position-relative d-flex align-items-center gap-2 rounded-pill px-3">
+                            <svg xmlns="http://w3.org" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
                             </svg>
-                        </button>
+                            <span class="d-none d-sm-inline small fw-bold">Giỏ hàng</span>
+                            <span class="badge rounded-pill bg-danger">
+                                @(Session["CartCount"] != null ? Session["CartCount"] : 0)
+                            </span>
+                        </a>
 
-                    </form>
-
-                    <!-- Cụm Giỏ hàng & Đăng nhập phía bên phải -->
-                    <ul class="navbar-nav ms-auto align-items-center">
-                        <!-- Icon giỏ hàng hiển thị số lượng số món -->
-                        <li class="nav-item me-3 position-relative">
-                            <a class="nav-link text-white fs-5" href="/Cart">
-                                <i class="fa-solid fa-cart-shopping"></i>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count">
-                                    @(Session["CartCount"] != null ? Session["CartCount"] : 0)
-                                </span>
+                        <!-- Nút Tài khoản -->
+                        <div class="dropdown">
+                            <a href="#" class="btn btn-outline-light dropdown-toggle rounded-pill px-3 btn-sm fw-bold" data-bs-toggle="dropdown">
+                                @(Session["UserFullName"] != null ? Session["UserFullName"] : "Tài khoản")
                             </a>
-                        </li>
-
-                        <!-- Cụm Đăng ký / Đăng nhập động dựa trên Session của tài khoản -->
-                        <li class="nav-item dropdown">
-                            @if (Session["UserFullName"] != null)
-                            {
-                                <!-- [ĐÃ ĐĂNG NHẬP]: Đổi icon, hiển thị tên người dùng và mở menu ẩn -->
-                                <a class="nav-link text-warning dropdown-toggle fw-bold" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                                    <i class="fa-solid fa-user-check me-1"></i> @Session["UserFullName"]
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    @if (Session["UserRole"] != null && Session["UserRole"].ToString() == "Admin")
+                            <ul class="dropdown-menu dropdown-menu-end shadow">
+                                @if (Session["UserFullName"] != null)
+                                {
+                                    if (Session["UserRole"] != null && Session["UserRole"].ToString() == "Admin")
                                     {
                                         <li><a class="dropdown-item fw-bold text-primary" href="/Admin/Dashboard">Trang Quản trị Admin</a></li>
-                                        <li class="dropdown-divider"></li>
+                                        <li><hr class="dropdown-divider"></li>
                                     }
                                     <li><a class="dropdown-item" href="/Account/Profile">Hồ sơ khách hàng</a></li>
                                     <li><a class="dropdown-item" href="/Order/History">Lịch sử giao dịch</a></li>
-                                    <li class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-danger" href="/Account/Logout">Đăng xuất</a></li>
-                                </ul>
-
-                            }
-                            else
-                            {
-                                <!-- [CHƯA ĐĂNG NHẬP]: Hiện nguyên bản 2 nút Đăng nhập / Đăng ký -->
-                                <a class="nav-link text-white dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                                    <i class="fa-solid fa-user me-1"></i> Tài khoản
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="/Account/Login"><i class="fa-solid fa-right-to-bracket me-2"></i>Đăng nhập</a></li>
-                                    <li><a class="dropdown-item" href="/Account/Register"><i class="fa-solid fa-user-plus me-2"></i>Đăng ký</a></li>
-                                </ul>
-                            }
-                        </li>
-                    </ul>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger fw-bold" href="/Account/Logout">Đăng xuất</a></li>
+                                }
+                                else
+                                {
+                                    <li><a class="dropdown-item fw-bold text-success" href="/Account/Login">Đăng nhập</a></li>
+                                    <li><a class="dropdown-item" href="/Account/Register">Đăng ký thành viên</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </nav>
+        </header>
+
+        <!-- 2. KHUNG NỘI DUNG CHÍNH CHIA 2 CỘT CHUẨN BÁCH HÓA XANH -->
+        <div class="container my-3">
+            <div class="row g-3">
+                <!-- CỘT TRÁI (3 phần): DANH MỤC SẢN PHẨM DỌC -->
+                <div class="col-lg-3">
+                    <div class="card border-0 shadow-sm sticky-top" style="top: 75px; z-index: 10;">
+                        <div class="card-header text-white fw-bold d-flex align-items-center gap-2 py-2" style="background-color: #006a37;">
+                            <svg xmlns="http://w3.org" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+                            </svg>
+                            <span>DANH MỤC SẢN PHẨM</span>
+                        </div>
+                        <div class="list-group list-group-flush">
+                            <a href="/Product/Category" class="list-group-item list-group-item-action fw-bold text-danger d-flex justify-content-between align-items-center">
+                                <span>TẤT CẢ SẢN PHẨM</span>
+                                <span class="badge bg-danger rounded-pill">HOT</span>
+                            </a>
+
+                            @if (ViewBag.Categories != null)
+                            {
+                                foreach (var cat in ViewBag.Categories)
+                                {
+                                    <div class="border-bottom">
+                                        <!-- Tiêu đề danh mục (Bấm vào để xổ xuống / thu gọn) -->
+                                        <a href="javascript:void(0)" class="list-group-item list-group-item-action border-0 text-uppercase small fw-bold py-2 d-flex justify-content-between align-items-center cat-toggle-btn">
+                                            <span>@cat.CategoryName</span>
+                                            <span class="cat-arrow text-muted" style="transition: transform 0.2s;">&#8964;</span>
+                                        </a>
+
+                                        <!-- Danh sách con xổ xuống bên trong (Mặc định ẩn) -->
+                                        <!-- Danh sách con xổ xuống bên trong -->
+                                        <div class="cat-sub-menu bg-white pb-2 ps-4 pe-2" style="display: none;">
+                                            <a href="/Product/Category/@cat.CategoryID" class="d-block py-1 text-decoration-none text-success fw-bold small">
+                                                &bull; Xem tất cả @cat.CategoryName
+                                            </a>
+
+                                            @{
+                                                string catNameLower = cat.CategoryName != null ? cat.CategoryName.ToLower() : "";
+                                                // Cặp dữ liệu: [Tên hiển thị trên menu] - [Từ khóa ngắn để tìm trúng sản phẩm]
+                                                var subItems = new Dictionary<string, string>();
+
+                                                if (catNameLower.Contains("kem") || catNameLower.Contains("chua"))
+                                                {
+                                                    subItems = new Dictionary<string, string> {
+                                                    };
+                                                }
+                                                else if (catNameLower.Contains("sữa"))
+                                                {
+                                                    subItems = new Dictionary<string, string> {
+                { "Sữa tươi các loại", "Sữa" },
+                { "Sữa hạt, sữa đậu", "Sữa" },
+                { "Sữa đặc, sữa bột", "Sữa" },
+                { "Thức uống lúa mạch", "Sữa" }
+            };
+                                                }
+                                                else if (catNameLower.Contains("thịt") || catNameLower.Contains("hải sản"))
+                                                {
+                                                    subItems = new Dictionary<string, string> {
+                { "Thịt heo các loại", "Thịt" },
+                { "Thịt bò tươi", "Bò" },
+                { "Thịt gà", "Gà" },
+                { "Cá, hải sản tươi", "Cá" },
+
+            };
+                                                }
+                                                else if (catNameLower.Contains("rau") || catNameLower.Contains("củ") || catNameLower.Contains("trái"))
+                                                {
+                                                    subItems = new Dictionary<string, string> {
+                { "Rau lá các loại", "Rau" },
+                { "Củ, quả tươi", "Củ" },
+                { "Trái cây tươi ngon", "Trái" }
+            };
+                                                }
+                                                else if (catNameLower.Contains("cà phê") || catNameLower.Contains("trà"))
+                                                {
+                                                    subItems = new Dictionary<string, string> {
+                { "Cà phê hoà tan", "Cà phê" },
+                { "Cà phê pha phin", "Cà phê" },
+                { "Trà khô, túi lọc", "Trà" },
+                { "Ngũ cốc, yến mạch", "Ngũ cốc" }
+            };
+                                                }
+                                                else if (catNameLower.Contains("dầu") || catNameLower.Contains("gia vị") || catNameLower.Contains("nước chấm"))
+                                                {
+                                                    subItems = new Dictionary<string, string> {
+                { "Dầu ăn các loại", "Dầu" },
+                { "Nước mắm, nước tương", "Nước mắm" },
+                { "Hạt nêm, bột ngọt", "Hạt nêm" },
+                { "Đường, muối, gia vị", "Đường" }
+            };
+                                                }
+                                                else if (catNameLower.Contains("bia") || catNameLower.Contains("giải khát"))
+                                                {
+                                                    subItems = new Dictionary<string, string> {
+                { "Bia, nước có cồn", "Bia" },
+                { "Nước ngọt các loại", "Nước ngọt" },
+                { "Nước suối, khoáng", "Nước suối" },
+                { "Trà đóng chai", "Trà" }
+            };
+                                                }
+
+                                                else if (catNameLower.Contains("gạo") || catNameLower.Contains("đồ khô"))
+                                                {
+                                                    subItems = new Dictionary<string, string> {
+                { "Gạo các loại", "Gạo" },
+                { "Mì, miến, phở ăn liền", "Mì" },
+                { "Bột các loại", "Bột" },
+                { "Đậu, hạt, đồ khô", "Đậu" }
+            };
+                                                }
+                                            }
+
+                                            <!-- Hiển thị các mục nhỏ riêng biệt -->
+                                            @foreach (var sub in subItems)
+                                            {
+                                                <a href="/Product/Search?keyword=@Server.UrlEncode(sub.Value)" class="d-block py-1 text-decoration-none text-dark small">
+                                                    @sub.Key
+                                                </a>
+                                            }
+
+
+
+                                            
+                                        </div>
+
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- CỘT PHẢI (9 phần): NỘI DUNG TRANG WEB -->
+                <div class="col-lg-9">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+
     </header>
 
-    <!-- Nơi chứa nội dung thay đổi theo từng trang con (Trang chủ, Chi tiết, Giỏ hàng...) -->
-    <main role="main" class="container my-4" style="min-height: 70vh;">
-        @RenderBody()
-    </main>
+
 
     <!-- Phần Chân trang (Footer) -->
     <footer class="border-top footer text-muted bg-light py-4 mt-5">
@@ -148,7 +255,65 @@
 
 
     <!-- Nhúng Bootstrap JavaScript -->
-    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <script>
+                // 1. Điều khiển nút Tài khoản (Dropdown ở góc trên bên phải)
+                var dropdownBtns = document.getElementsByClassName('dropdown-toggle');
+                for (var i = 0; i < dropdownBtns.length; i++) {
+                    dropdownBtns[i].onclick = function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        var btn = e.currentTarget;
+                        if (!btn) return;
+                        var menu = btn.nextElementSibling;
+                        if (menu) {
+                            if (menu.className.indexOf('show') === -1) {
+                                menu.className += ' show';
+                            } else {
+                                menu.className = menu.className.replace(' show', '');
+                            }
+                        }
+                    };
+                }
+
+                // Bấm ra ngoài thì tự đóng menu Tài khoản
+                document.addEventListener('click', function () {
+                    var openMenus = document.getElementsByClassName('dropdown-menu');
+                    for (var j = 0; j < openMenus.length; j++) {
+                        openMenus[j].className = openMenus[j].className.replace(' show', '');
+                    }
+                });
+
+                // 2. Điều khiển menu Danh mục sản phẩm xổ xuống bên trái
+                var catButtons = document.getElementsByClassName('cat-toggle-btn');
+                for (var k = 0; k < catButtons.length; k++) {
+                    catButtons[k].onclick = function (e) {
+                        e.preventDefault();
+                        var btn = e.currentTarget;
+                        if (!btn) return;
+
+                        var subMenu = btn.nextElementSibling;
+                        var arrow = btn.querySelector('.cat-arrow');
+                        var isCurrentlyOpen = subMenu && subMenu.style.display === 'block';
+
+                        var allSubMenus = document.getElementsByClassName('cat-sub-menu');
+                        for (var m = 0; m < allSubMenus.length; m++) {
+                            allSubMenus[m].style.display = 'none';
+                        }
+                        var allArrows = document.getElementsByClassName('cat-arrow');
+                        for (var n = 0; n < allArrows.length; n++) {
+                            allArrows[n].style.transform = 'rotate(0deg)';
+                        }
+
+                        if (!isCurrentlyOpen && subMenu) {
+                            subMenu.style.display = 'block';
+                            if (arrow) {
+                                arrow.style.transform = 'rotate(180deg)';
+                            }
+                        }
+                    };
+                }
+    </script>
     @RenderSection("scripts", required: false)
 </body>
+
 </html>

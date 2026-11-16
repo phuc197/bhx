@@ -38,9 +38,19 @@ namespace bachhoaxanh.Controllers
             // Lọc theo Từ khóa tìm kiếm
             if (!string.IsNullOrEmpty(keyword))
             {
-                query = query.Where(p => p.ProductName.Contains(keyword));
+                string kw = keyword.Trim().ToLower();
+                if (kw == "cá")
+                {
+                    query = query.Where(p => p.ProductName.ToLower().Contains("cá")
+                                          && !p.ProductName.ToLower().Contains("cánh"));
+                }
+                else
+                {
+                    query = query.Where(p => p.ProductName.ToLower().Contains(kw));
+                }
                 ViewBag.Keyword = keyword;
             }
+
 
             // Lọc theo tiêu chí Mức giá (Đáp ứng mục lọc theo các tiêu chí lọc)
             if (!string.IsNullOrEmpty(priceFilter))
