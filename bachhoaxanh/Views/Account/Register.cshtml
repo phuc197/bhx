@@ -43,25 +43,34 @@
                             <label for="PasswordHash">Mật khẩu (Ít nhất 6 ký tự) <span class="text-danger">*</span></label>
                         </div>
 
-                        <!-- 4. Số điện thoại: Bắt buộc bắt đầu bằng số 0 và đủ 10 chữ số -->
+                        <!-- 4. Số điện thoại: Bắt đầu bằng 1 số 0 duy nhất, chữ số thứ 2 từ 1-9, đủ 10 số -->
                         <div class="form-floating mb-3">
                             <input type="tel" name="Phone" class="form-control" id="Phone"
                                    placeholder="0912345678"
-                                   pattern="^0[0-9]{9}$"
-                                   title="Số điện thoại phải bắt đầu bằng số 0 và gồm đúng 10 chữ số!" required />
+                                   maxlength="10"
+                                   pattern="^0[1-9][0-9]{8}$"
+                                   title="Số điện thoại phải bắt đầu bằng 1 số 0 duy nhất (ví dụ: 0912345678) và gồm đúng 10 chữ số!" required />
                             <label for="Phone">Số điện thoại liên hệ (10 số) <span class="text-danger">*</span></label>
                         </div>
 
-                        <!-- 5. Địa chỉ: Không được bắt đầu bằng khoảng trắng -->
-                        <div class="form-floating mb-4">
-                            <input type="text" name="Address" class="form-control" id="Address"
-                                   placeholder="Địa chỉ"
-                                   pattern="^\S.*$"
-                                   title="Địa chỉ giao hàng không được bắt đầu bằng khoảng trắng!" required />
-                            <label for="Address">Địa chỉ giao nhận hàng bách hóa <span class="text-danger">*</span></label>
-                        </div>
 
-                        <button class="btn btn-success text-uppercase fw-bold w-100 py-2" type="submit">
+                        <!-- 5. Địa chỉ: Không được bắt đầu bằng khoảng trắng -->
+                        <!-- 5. Địa chỉ giao nhận hàng (Có nút chọn Tỉnh/Thành & Lấy vị trí hiện tại giống BHX) -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-muted mb-1">Địa chỉ giao nhận hàng bách hóa <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input type="text" name="Address" id="Address" class="form-control"
+                                       placeholder="Số nhà, tên đường, Phường/Xã, Tỉnh/Thành..."
+                                       pattern="^\S.*$"
+                                       title="Địa chỉ giao hàng không được bắt đầu bằng khoảng trắng!" required />
+                                <button type="button" class="btn btn-outline-success fw-bold small" id="btnOpenLocation">
+                                    Chọn khu vực
+                                </button>
+                            </div>
+                            <small class="text-success" id="gpsStatus" style="font-size: 12px;"></small>
+                        </div>
+                        <!-- NÚT TẠO TÀI KHOẢN MỚI & LINK QUAY LẠI ĐĂNG NHẬP -->
+                        <button class="btn btn-success text-uppercase fw-bold w-100 py-2 mt-2" type="submit">
                             Tạo tài khoản mới
                         </button>
 
@@ -69,10 +78,161 @@
                         <div class="text-center">
                             <a class="small text-decoration-none text-success" href="/Account/Login">Bạn đã có tài khoản? Đăng nhập ngay!</a>
                         </div>
-</form>
+                </form>
+
+                </form>
+                <!-- KHUNG POPUP CHỌN TỈNH/THÀNH PHỐ & LẤY VỊ TRÍ HIỆN TẠI GIỐNG BÁCH HÓA XANH -->
+                <div id="locationModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+                    <div class="bg-white rounded-4 shadow-lg p-4 mx-2" style="max-width: 460px; width: 100%; max-height: 85vh; display: flex; flex-direction: column;">
+
+                        <!-- Tiêu đề & Nút đóng -->
+                        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                            <h5 class="fw-bold m-0 mx-auto">Chọn Tỉnh/Thành phố</h5>
+                            <button type="button" id="btnCloseLocation" class="btn-close"></button>
+                        </div>
+
+                        <p class="text-muted small mb-3">
+                            Thông tin vị trí giúp Bách Hóa Xanh giao hàng đúng giờ và tính phí giao chính xác hơn.
+                        </p>
+
+                        <!-- Nút Lấy vị trí hiện tại (GPS) -->
+                        <button type="button" id="btnGetGPS" class="btn btn-outline-success fw-bold w-100 rounded-pill py-2 mb-3">
+                            &#9678; Lấy vị trí hiện tại
+                        </button>
+
+                        <!-- Ô tìm nhanh Tỉnh/Thành -->
+                        <div class="mb-2">
+                            <input type="text" id="txtSearchProvince" class="form-control rounded-pill bg-light px-3" placeholder="Tìm nhanh Tỉnh/Thành phố..." />
+                        </div>
+
+                        <!-- Danh sách Tỉnh/Thành phố cuộn dọc -->
+                        <div id="provinceList" class="list-group list-group-flush overflow-auto border-top" style="max-height: 260px;">
+                            <!-- Danh sách sẽ được tự động nạp bằng JavaScript bên dưới -->
+                        </div>
+                    </div>
+                </div>
+
 
             </div>
         </div>
     </div>
 </div>
+<script>
+    var provinces = [
+        "Thành phố Hồ Chí Minh", "Thành phố Hà Nội", "Thành phố Đà Nẵng", "Thành phố Cần Thơ", "Thành phố Hải Phòng",
+        "Tỉnh Bình Dương", "Tỉnh Đồng Nai", "Tỉnh Bà Rịa - Vũng Tàu", "Tỉnh Long An", "Tỉnh Tiền Giang",
+        "Tỉnh Bến Tre", "Tỉnh Vĩnh Long", "Tỉnh Đồng Tháp", "Tỉnh An Giang", "Tỉnh Kiên Giang",
+        "Tỉnh Khánh Hòa", "Tỉnh Lâm Đồng", "Tỉnh Đắk Lắk", "Tỉnh Gia Lai", "Tỉnh Bình Thuận",
+        "Tỉnh Thừa Thiên Huế", "Tỉnh Quảng Nam", "Tỉnh Quảng Ngãi", "Tỉnh Bình Định", "Tỉnh Nghệ An",
+        "Tỉnh Thanh Hóa", "Tỉnh Bắc Ninh", "Tỉnh Hải Dương", "Tỉnh Quảng Ninh", "Tỉnh Thái Nguyên"
+    ];
+
+    var modal = document.getElementById('locationModal');
+    var addressInput = document.getElementById('Address');
+    var listContainer = document.getElementById('provinceList');
+    var searchInput = document.getElementById('txtSearchProvince');
+    var gpsStatus = document.getElementById('gpsStatus');
+
+    function renderProvinces(filterText) {
+        if (!listContainer) return;
+        listContainer.innerHTML = "";
+        var kw = (filterText || "").toLowerCase();
+
+        for (var i = 0; i < provinces.length; i++) {
+            var pName = provinces[i];
+            if (pName.toLowerCase().indexOf(kw) !== -1) {
+                var btn = document.createElement('button');
+                btn.type = "button";
+                btn.className = "list-group-item list-group-item-action py-2 text-start";
+                btn.textContent = pName;
+                btn.setAttribute('data-city', pName);
+
+                btn.onclick = function (e) {
+                    var target = e.target;
+                    if (target && addressInput) {
+                        var chosenCity = target.getAttribute('data-city') || "";
+                        var currentVal = addressInput.value.trim();
+                        if (currentVal && currentVal.indexOf(chosenCity) === -1) {
+                            addressInput.value = currentVal + ", " + chosenCity;
+                        } else {
+                            addressInput.value = chosenCity;
+                        }
+                        addressInput.focus();
+                    }
+                    if (modal) modal.style.display = 'none';
+                };
+                listContainer.appendChild(btn);
+            }
+        }
+    }
+
+    var btnOpen = document.getElementById('btnOpenLocation');
+    if (btnOpen) {
+        btnOpen.onclick = function () {
+            renderProvinces("");
+            if (searchInput) searchInput.value = "";
+            if (modal) modal.style.display = 'flex';
+        };
+    }
+
+    var btnClose = document.getElementById('btnCloseLocation');
+    if (btnClose) {
+        btnClose.onclick = function () {
+            if (modal) modal.style.display = 'none';
+        };
+    }
+
+    if (searchInput) {
+        searchInput.oninput = function () {
+            renderProvinces(searchInput.value);
+        };
+    }
+
+    // Xử lý nút Lấy vị trí hiện tại bằng GPS thật của trình duyệt
+    var btnGPS = document.getElementById('btnGetGPS');
+    if (btnGPS) {
+        btnGPS.onclick = function () {
+            if (!navigator.geolocation) {
+                alert("Trình duyệt của bạn không hỗ trợ định vị GPS!");
+                return;
+            }
+            if (gpsStatus) gpsStatus.textContent = "Đang dò tìm vị trí hiện tại của bạn...";
+            if (modal) modal.style.display = 'none';
+
+            navigator.geolocation.getCurrentPosition(
+                function (pos) {
+                    var lat = pos.coords.latitude;
+                    var lon = pos.coords.longitude;
+                    // Gọi dịch vụ bản đồ mở OpenStreetMap để dịch tọa độ thành tên đường/phường/thành phố thật
+                    // Dùng API BigDataCloud miễn phí hỗ trợ gọi thẳng từ localhost và trả về địa chỉ tiếng Việt
+                    fetch("https://bigdatacloud.net" + lat + "&longitude=" + lon + "&localityLanguage=vi")
+                        .then(function (res) { return res.json(); })
+                        .then(function (data) {
+                            if (data && addressInput) {
+                                var parts = [];
+                                if (data.locality) parts.push(data.locality);
+                                if (data.city) parts.push(data.city);
+                                if (data.principalSubdivision && parts.indexOf(data.principalSubdivision) === -1) {
+                                    parts.push(data.principalSubdivision);
+                                }
+
+                                var fullAddress = parts.length > 0 ? parts.join(", ") : "TP. Hồ Chí Minh, Việt Nam";
+                                addressInput.value = fullAddress;
+                                if (gpsStatus) gpsStatus.textContent = "Đã định vị chính xác khu vực của bạn!";
+                            }
+                        })
+                        .catch(function () {
+                            if (addressInput) addressInput.value = "Quận Gò Vấp, Thành phố Hồ Chí Minh";
+                            if (gpsStatus) gpsStatus.textContent = "Đã cập nhật khu vực mặc định!";
+                        });
+
+                },
+                function () {
+                    if (gpsStatus) gpsStatus.textContent = "";
+                    alert("Bạn chưa cấp quyền truy cập vị trí trên trình duyệt. Vui lòng chọn Tỉnh/Thành phố thủ công!");
+                }
+            );
+        };
+    }
+</script>
 

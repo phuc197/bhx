@@ -53,12 +53,12 @@ namespace BachHoaXanhDB.Controllers
             {
                 ModelState.AddModelError("PasswordHash", "Mật khẩu phải từ 6 ký tự trở lên và không được có khoảng trắng ở đầu!");
             }
-
-            // 4. Kiểm tra Số điện thoại phải bắt đầu bằng số 0 và có đúng 10 chữ số
-            if (string.IsNullOrEmpty(user.Phone) || !System.Text.RegularExpressions.Regex.IsMatch(user.Phone, @"^0[0-9]{9}$"))
+            // 4. Kiểm tra Số điện thoại phải bắt đầu bằng 1 số 0 duy nhất (chữ số thứ 2 khác 0) và có đúng 10 chữ số
+            if (string.IsNullOrEmpty(user.Phone) || !System.Text.RegularExpressions.Regex.IsMatch(user.Phone, @"^0[1-9][0-9]{8}$"))
             {
-                ModelState.AddModelError("Phone", "Số điện thoại phải bắt đầu bằng số 0 và gồm đúng 10 chữ số!");
+                ModelState.AddModelError("Phone", "Số điện thoại phải bắt đầu bằng 1 số 0 duy nhất và gồm đúng 10 chữ số!");
             }
+
 
             // 5. Kiểm tra trùng Email trong SQL Server
             if (!string.IsNullOrEmpty(user.Email) && db.Users.Any(u => u.Email.ToLower() == user.Email.ToLower()))
