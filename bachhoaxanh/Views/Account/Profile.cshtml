@@ -1,77 +1,245 @@
 ﻿@model bachhoaxanh.Models.User
 @{
     Layout = "~/Views/Shared/_MasterLayout.cshtml";
-    ViewBag.Title = "Hồ sơ tài khoản - Bách Hóa Xanh";
+    ViewBag.Title = "Hồ sơ cá nhân của bạn";
 }
 
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-7">
-            <div class="card shadow-sm border-0 p-4">
-                <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
-                    <div>
-                        <h4 class="fw-bold text-success m-0">HỒ SƠ CÁ NHÂN CỦA BẠN</h4>
-                        <small class="text-muted">Quản lý thông tin tài khoản và địa chỉ nhận hàng mặc định</small>
-                    </div>
-                    <span class="badge @(Model.Role == "Admin" ? "bg-danger" : "bg-success") fs-6">
-                        @(Model.Role == "Admin" ? "Quản trị viên" : "Khách hàng")
-                    </span>
-                </div>
+<div class="card border-0 shadow-sm rounded-4 p-4">
+    <div class="d-flex justify-content-between align-items-center mb-1">
+        <h4 class="fw-bold text-success m-0">HỒ SƠ CÁ NHÂN CỦA BẠN</h4>
+        <span class="badge bg-success px-3 py-2">@(Model.Role == "Admin" ? "Quản trị viên" : "Khách hàng")</span>
+    </div>
+    <p class="text-muted small mb-4">Quản lý thông tin tài khoản và địa chỉ nhận hàng mặc định</p>
 
-                @if (TempData["ProfileSuccess"] != null)
-                {
-                    <div class="alert alert-success alert-dismissible fade show">
-                        @TempData["ProfileSuccess"]
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                }
-
-                @if (ViewBag.Error != null)
-                {
-                    <div class="alert alert-danger">@ViewBag.Error</div>
-                }
-
-                <form action="/Account/Profile" method="POST">
-                    @Html.AntiForgeryToken()
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Địa chỉ Email đăng nhập</label>
-                        <input type="text" class="form-control bg-light" value="@Model.Email" readonly />
-                        <small class="text-muted">Email dùng để đăng nhập cố định và không thể thay đổi.</small>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Họ và tên <span class="text-danger">*</span></label>
-                        <input type="text" name="fullName" class="form-control" value="@Model.FullName" pattern="^\S.*$" title="Họ tên không được bắt đầu bằng khoảng trắng" required />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Số điện thoại liên hệ <span class="text-danger">*</span></label>
-                        <input type="tel" name="phone" class="form-control" value="@Model.Phone" pattern="^0[0-9]{9}$" title="Số điện thoại bắt đầu bằng số 0 và gồm 10 chữ số" required />
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">Địa chỉ nhận hàng mặc định <span class="text-danger">*</span></label>
-                        <textarea name="address" class="form-control" rows="3" required>@Model.Address</textarea>
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <button type="submit" class="btn btn-success fw-bold px-4">Lưu thay đổi</button>
-                            <a href="/Account/ForgotPassword" class="btn btn-outline-warning text-dark fw-bold ms-2">Đổi mật khẩu</a>
-                        </div>
-
-                        @if (Model.Role == "Admin")
-                        {
-                            <a href="/Admin/Dashboard" class="btn btn-dark fw-bold">Về trang Quản trị &rarr;</a>
-                        }
-                        else
-                        {
-                            <a href="/Order/History" class="btn btn-outline-success fw-bold">Xem lịch sử đơn hàng &rarr;</a>
-                        }
-                    </div>
-                </form>
-            </div>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+    }
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+    }
+
+<form id="profileForm" action="/Account/Profile" method="POST">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label class="form-label fw-bold small">Địa chỉ Email đăng nhập</label>
+        <input type="email" class="form-control bg-light" value="@Model.Email" readonly />
+        <small class="text-muted">Email dùng để đăng nhập cố định và không thể thay đổi.</small>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label fw-bold small">Họ và tên <span class="text-danger">*</span></label>
+        <input type="text" name="FullName" id="ProfileFullName" class="form-control"
+               value="@Model.FullName"
+               pattern="^[a-zA-ZÀ-ỹ][a-zA-ZÀ-ỹ\s]{1,49}$"
+               title="Họ và tên phải bắt đầu bằng chữ cái, chỉ chứa chữ cái và khoảng trắng (từ 2 đến 50 ký tự)"
+               placeholder="Ví dụ: Nguyễn Văn Đức" required />
+    </div>
+
+
+    <div class="mb-3">
+        <label class="form-label fw-bold small">Số điện thoại liên hệ <span class="text-danger">*</span></label>
+        <input type="tel" name="Phone" id="ProfilePhone" class="form-control"
+               value="@Model.Phone"
+               maxlength="10"
+               pattern="^0[1-9][0-9]{8}$"
+               title="Số điện thoại phải bắt đầu bằng 1 số 0 duy nhất và gồm đúng 10 chữ số (VD: 0912345678)"
+               placeholder="Nhập đúng 10 số bắt đầu bằng 1 số 0..." required />
+    </div>
+
+    <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+            <label class="form-label fw-bold small m-0">Địa chỉ nhận hàng mặc định <span class="text-danger">*</span></label>
+            <button type="button" id="btnOpenProfileAddr" class="btn btn-sm btn-outline-success fw-bold">
+                Chọn địa chỉ / Lấy vị trí hiện tại
+            </button>
+        </div>
+        <textarea name="Address" id="ProfileAddress" class="form-control" rows="2" required placeholder="Vui lòng chọn khu vực và nhập số nhà, tên đường...">@Model.Address</textarea>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2">
+        <button type="submit" class="btn btn-success fw-bold px-4">Lưu thay đổi</button>
+        <a href="/Account/ChangePassword" class="btn btn-outline-warning text-dark fw-bold px-3">Đổi mật khẩu</a>
+        <a href="/Order/History" class="btn btn-outline-primary fw-bold px-3">Xem lịch sử đơn hàng &rarr;</a>
+    </div>
+</form>
+</div>
+
+<!-- POPUP CHỌN ĐỊA CHỈ NHẬN HÀNG & ĐỊNH VỊ GPS -->
+<div id="profileAddrModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10600; align-items: center; justify-content: center;">
+    <div class="bg-white rounded-4 shadow-lg p-4 mx-2" style="max-width: 460px; width: 100%;">
+        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+            <h5 class="fw-bold m-0 mx-auto">Địa chỉ nhận hàng mặc định</h5>
+            <button type="button" id="btnCloseProfileAddr" class="btn-close"></button>
+        </div>
+
+        <p class="text-muted small mb-3">
+            Chọn khu vực và nhập số nhà để lưu làm địa chỉ giao hàng mặc định cho các đơn sau.
+        </p>
+
+        <button type="button" id="btnGetProfileGPS" class="btn btn-outline-success fw-bold w-100 rounded-3 py-2 mb-2">
+            &#9678; Lấy vị trí hiện tại
+        </button>
+        <div id="profileLocMsg" class="small text-success mb-2 text-center"></div>
+
+        <div class="mb-2">
+            <label class="small text-muted fw-bold">Tỉnh/Thành phố</label>
+            <select id="profCity" class="form-select">
+                <option value="Thành phố Hồ Chí Minh">Thành phố Hồ Chí Minh</option>
+                <option value="Thành phố Hà Nội">Thành phố Hà Nội</option>
+                <option value="Thành phố Đà Nẵng">Thành phố Đà Nẵng</option>
+                <option value="Tỉnh Bình Dương">Tỉnh Bình Dương</option>
+                <option value="Tỉnh Đồng Nai">Tỉnh Đồng Nai</option>
+            </select>
+        </div>
+
+        <div class="mb-2">
+            <label class="small text-muted fw-bold">Phường/Xã</label>
+            <select id="profWard" class="form-select">
+                <option value="Phường An Nhơn">Phường An Nhơn</option>
+                <option value="Phường Hạnh Thông">Phường Hạnh Thông</option>
+                <option value="Phường 1, Quận Gò Vấp">Phường 1, Quận Gò Vấp</option>
+                <option value="Phường Bến Nghé, Quận 1">Phường Bến Nghé, Quận 1</option>
+                <option value="Phường Linh Trung, TP. Thủ Đức">Phường Linh Trung, TP. Thủ Đức</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="small text-muted fw-bold">Số nhà, tên đường <span class="text-danger">*</span></label>
+            <input type="text" id="profStreet" class="form-control" placeholder="Ví dụ: 123 Đường Nguyễn Oanh" />
+        </div>
+
+        <button type="button" id="btnConfirmProfileAddr" class="btn btn-success fw-bold w-100 py-2">
+            XÁC NHẬN ĐỊA CHỈ NÀY
+        </button>
     </div>
 </div>
+
+<script>
+            // 1. KIỂM TRA CHẶT CHẼ SỐ ĐIỆN THOẠI KHI LƯU HỒ SƠ (CHẶN 2 SỐ 0 ĐẦU)
+            var profForm = document.getElementById('profileForm');
+            var profPhone = document.getElementById('ProfilePhone');
+            var profAddr = document.getElementById('ProfileAddress');
+
+            if (profForm) {
+                profForm.addEventListener('submit', function (evt) {
+                    var phoneVal = (profPhone && "value" in profPhone) ? String(profPhone.value).trim() : "";
+                    var phoneRegex = /^0[1-9][0-9]{8}$/;
+                    if (!phoneRegex.test(phoneVal)) {
+                        evt.preventDefault();
+                        alert("Số điện thoại không hợp lệ! Phải bắt đầu bằng duy nhất 1 số 0 (không được nhập 00...) và gồm đúng 10 chữ số.");
+                        if (profPhone instanceof HTMLElement) profPhone.focus();
+                        return;
+                    }
+
+                    var addrVal = (profAddr && "value" in profAddr) ? String(profAddr.value).trim() : "";
+                    if (addrVal.length < 5) {
+                        evt.preventDefault();
+                        alert("Vui lòng chọn khu vực và nhập đầy đủ địa chỉ nhận hàng!");
+                        if (profAddr instanceof HTMLElement) profAddr.focus();
+                        return;
+                    }
+
+                    var profName = document.getElementById('ProfileFullName');
+                    var nameVal = (profName && "value" in profName) ? String(profName.value).trim() : "";
+                    var nameRegex = /^[a-zA-ZÀ-ỹ][a-zA-ZÀ-ỹ\s]{1,49}$/;
+                    if (!nameRegex.test(nameVal)) {
+                        evt.preventDefault();
+                        alert("Họ và tên không hợp lệ! Tên phải bắt đầu bằng chữ cái tiếng Việt/Anh, không được bắt đầu bằng số hay ký tự đặc biệt (tối thiểu 2 ký tự).");
+                        if (profName instanceof HTMLElement) profName.focus();
+                        return;
+                    }
+                });
+}
+
+            // 2. XỬ LÝ POPUP CHỌN ĐỊA CHỈ & LẤY VỊ TRÍ GPS
+            var pModal = document.getElementById('profileAddrModal');
+            var btnOpenP = document.getElementById('btnOpenProfileAddr');
+            var btnCloseP = document.getElementById('btnCloseProfileAddr');
+            var btnGpsP = document.getElementById('btnGetProfileGPS');
+            var btnApplyP = document.getElementById('btnConfirmProfileAddr');
+            var pCity = document.getElementById('profCity');
+            var pWard = document.getElementById('profWard');
+            var pStreet = document.getElementById('profStreet');
+            var pMsg = document.getElementById('profileLocMsg');
+
+            if (btnOpenP) {
+                btnOpenP.addEventListener('click', function () {
+                    if (pModal) pModal.setAttribute('style', 'display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10600; align-items: center; justify-content: center;');
+                });
+            }
+
+            if (btnCloseP) {
+                btnCloseP.addEventListener('click', function () {
+                    if (pModal) pModal.setAttribute('style', 'display: none;');
+                });
+            }
+
+            if (btnGpsP) {
+                btnGpsP.addEventListener('click', function () {
+                    if (!navigator.geolocation) {
+                        alert("Trình duyệt không hỗ trợ định vị GPS!");
+                        return;
+                    }
+                    if (pMsg) pMsg.textContent = "Đang lấy vị trí hiện tại của bạn...";
+                    navigator.geolocation.getCurrentPosition(
+                        function (pos) {
+                            var lat = pos.coords.latitude;
+                            var lon = pos.coords.longitude;
+                            fetch("https://bigdatacloud.net" + lat + "&longitude=" + lon + "&localityLanguage=vi")
+                                .then(function (r) { return r.json(); })
+                                .then(function (d) {
+                                    if (d) {
+                                        var wardName = d.locality || "Phường Hạnh Thông";
+                                        var cityName = d.principalSubdivision || "Thành phố Hồ Chí Minh";
+                                        if (pWard) {
+                                            var optW = document.createElement('option');
+                                            optW.value = wardName;
+                                            optW.textContent = wardName;
+                                            optW.selected = true;
+                                            pWard.appendChild(optW);
+                                        }
+                                        if (pCity) {
+                                            var optC = document.createElement('option');
+                                            optC.value = cityName;
+                                            optC.textContent = cityName;
+                                            optC.selected = true;
+                                            pCity.appendChild(optC);
+                                        }
+          if (pMsg) pMsg.textContent = "Đã định vị xong! Mời bạn nhập thêm số nhà, tên đường bên dưới.";
+                                    if (pStreet instanceof HTMLElement) pStreet.focus();
+                                }
+                            })
+                            .catch(function () {
+                                if (pMsg) pMsg.textContent = "Đã cập nhật khu vực mặc định! Vui lòng nhập số nhà bên dưới.";
+                            });
+                    },
+                    function () {
+                        if (pMsg) pMsg.textContent = "Không thể lấy GPS, vui lòng chọn thủ công bên dưới.";
+                    }
+                );
+            });
+        }
+
+        if (btnApplyP) {
+            btnApplyP.addEventListener('click', function () {
+                var streetVal = (pStreet && "value" in pStreet) ? String(pStreet.value).trim() : "";
+                if (!streetVal) {
+                    alert("Vui lòng nhập Số nhà, tên đường của bạn!");
+                    if (pStreet instanceof HTMLElement) pStreet.focus();
+                    return;
+                }
+                var wardVal = (pWard && "value" in pWard) ? String(pWard.value) : "";
+                var cityVal = (pCity && "value" in pCity) ? String(pCity.value) : "";
+                if (profAddr && "value" in profAddr) {
+                    profAddr.value = streetVal + ", " + wardVal + ", " + cityVal;
+                }
+                if (pModal) pModal.setAttribute('style', 'display: none;');
+            });
+        }
+</script>

@@ -71,31 +71,74 @@
                             </span>
                         </a>
 
-                        <!-- Nút Tài khoản -->
                         <div class="dropdown">
-                            <a href="#" class="btn btn-outline-light dropdown-toggle rounded-pill px-3 btn-sm fw-bold" data-bs-toggle="dropdown">
-                                @(Session["UserFullName"] != null ? Session["UserFullName"] : "Tài khoản")
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow">
-                                @if (Session["UserFullName"] != null)
+                            <button class="btn text-white fw-bold dropdown-toggle d-flex align-items-center gap-2 border-0" type="button" id="userDropdownMenu" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #00723c;">
+                                <span>&#128100; Tài khoản của @(Session["UserFullName"] ?? "Khách")</span>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-end p-2 border-0 shadow-lg rounded-4" aria-labelledby="userDropdownMenu" style="width: 310px; background-color: #f3f4f6;">
+                                @if (Session["UserID"] != null)
                                 {
-                                    if (Session["UserRole"] != null && Session["UserRole"].ToString() == "Admin")
-                                    {
-                                        <li><a class="dropdown-item fw-bold text-primary" href="/Admin/Dashboard">Trang Quản trị Admin</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                    }
-                                    <li><a class="dropdown-item" href="/Account/Profile">Hồ sơ khách hàng</a></li>
-                                    <li><a class="dropdown-item" href="/Order/History">Lịch sử giao dịch</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-danger fw-bold" href="/Account/Logout">Đăng xuất</a></li>
+                                    <!-- KHỐI 1: THÔNG TIN TÀI KHOẢN & ĐƠN HÀNG -->
+                                    <div class="bg-white rounded-3 shadow-sm mb-2 overflow-hidden">
+                                        <a href="/Account/Profile" class="dropdown-item py-2 px-3 border-bottom d-flex justify-content-between align-items-center">
+                                            <span>&#128205; Thông tin và địa chỉ nhận hàng</span>
+                                            <span class="text-muted">&rsaquo;</span>
+                                        </a>
+                                        <a href="/Order/History" class="dropdown-item py-2 px-3 border-bottom d-flex justify-content-between align-items-center">
+                                            <span>&#128717; Đơn hàng từng mua</span>
+                                            <span class="text-muted">&rsaquo;</span>
+                                        </a>
+                                        @if (Session["UserRole"] != null && Session["UserRole"].ToString() == "Admin")
+                                        {
+                                            <a href="/Admin/Dashboard" class="dropdown-item py-2 px-3 border-bottom d-flex justify-content-between align-items-center text-danger fw-bold">
+                                                <span>&#9881; Trang Quản Trị Admin</span>
+                                                <span>&rsaquo;</span>
+                                            </a>
+                                        }
+                                        <a href="/Account/Logout" class="dropdown-item py-2 px-3 d-flex justify-content-between align-items-center text-muted">
+                                            <span>&#128682; Đăng xuất tài khoản</span>
+                                            <span>&rsaquo;</span>
+                                        </a>
+                                    </div>
                                 }
                                 else
                                 {
-                                    <li><a class="dropdown-item fw-bold text-success" href="/Account/Login">Đăng nhập</a></li>
-                                    <li><a class="dropdown-item" href="/Account/Register">Đăng ký thành viên</a></li>
+                                    <!-- KHỐI 1 KHI CHƯA ĐĂNG NHẬP -->
+                                    <div class="bg-white rounded-3 shadow-sm mb-2 overflow-hidden">
+                                        <a href="/Account/Login" class="dropdown-item py-2 px-3 border-bottom d-flex justify-content-between align-items-center fw-bold text-success">
+                                            <span>&#128273; Đăng nhập tài khoản</span>
+                                            <span>&rsaquo;</span>
+                                        </a>
+                                        <a href="/Account/Register" class="dropdown-item py-2 px-3 d-flex justify-content-between align-items-center">
+                                            <span>&#128221; Đăng ký thành viên mới</span>
+                                            <span>&rsaquo;</span>
+                                        </a>
+                                    </div>
                                 }
-                            </ul>
+
+                                <!-- KHỐI 2: HỖ TRỢ KHÁCH HÀNG & LIÊN HỆ GIỐNG HỆT ẢNH MẪU -->
+                                <div class="bg-white rounded-3 shadow-sm overflow-hidden">
+                                    <div class="px-3 py-2 fw-bold text-dark border-bottom small">
+                                        Hỗ trợ khách hàng
+                                    </div>
+                                    <a href="tel:19001908" class="dropdown-item py-2 px-3 border-bottom small">
+                                        &#128222; Tư vấn: <strong class="text-dark">1900.1908</strong> <span class="text-muted">(7:30 - 21:00)</span>
+                                    </a>
+                                    <a href="tel:18001067" class="dropdown-item py-2 px-3 border-bottom small d-flex justify-content-between align-items-center gap-2">
+                                        <span>&#128222; Khiếu nại: <strong class="text-dark">1800.1067</strong> <span class="text-muted" style="font-size: 11px;">(7:30 - 21:00)</span></span>
+                                        <span class="fw-bold text-success flex-shrink-0" style="font-size: 11px;">Miễn phí</span>
+                                    </a>
+                                    <!-- THAY SỐ ĐIỆN THOẠI ZALO CỦA BẠN VÀO CHỖ 0987654321 BÊN DƯỚI -->
+                                    <a href="https://zalo.me/0782723405" target="_blank" class="dropdown-item py-2 px-3 small d-flex justify-content-between align-items-center">
+                                        <span><span class="badge bg-primary rounded-pill me-1">Zalo</span> Chat với BHX qua Zalo</span>
+                                        <span class="text-muted">&rsaquo;</span>
+                                    </a>
+                                </div>
+
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -144,7 +187,8 @@
 
                                                 if (catNameLower.Contains("kem") || catNameLower.Contains("chua"))
                                                 {
-                                                    subItems = new Dictionary<string, string> {
+                                                    subItems = new Dictionary<string, string>
+                                                    {
                                                     };
                                                 }
                                                 else if (catNameLower.Contains("sữa"))
@@ -223,7 +267,7 @@
 
 
 
-                                            
+
                                         </div>
 
                                     </div>
@@ -256,63 +300,58 @@
 
     <!-- Nhúng Bootstrap JavaScript -->
     <script>
-                // 1. Điều khiển nút Tài khoản (Dropdown ở góc trên bên phải)
-                var dropdownBtns = document.getElementsByClassName('dropdown-toggle');
-                for (var i = 0; i < dropdownBtns.length; i++) {
-                    dropdownBtns[i].onclick = function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        var btn = e.currentTarget;
-                        if (!btn) return;
-                        var menu = btn.nextElementSibling;
-                        if (menu) {
-                            if (menu.className.indexOf('show') === -1) {
-                                menu.className += ' show';
-                            } else {
-                                menu.className = menu.className.replace(' show', '');
-                            }
-                        }
-                    };
-                }
+            // 1. Điều khiển nút Tài khoản (Dropdown ở góc trên bên phải)
+            var dropdownBtns = document.getElementsByClassName('dropdown-toggle');
+            for (var i = 0; i < dropdownBtns.length; i++) {
+                dropdownBtns[i].addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var btn = e.currentTarget;
+                    if (!(btn instanceof Element)) return;
 
-                // Bấm ra ngoài thì tự đóng menu Tài khoản
-                document.addEventListener('click', function () {
-                    var openMenus = document.getElementsByClassName('dropdown-menu');
-                    for (var j = 0; j < openMenus.length; j++) {
-                        openMenus[j].className = openMenus[j].className.replace(' show', '');
+                    var menu = btn.nextElementSibling;
+                    if (menu) {
+                        var cls = String(menu.className);
+                        if (cls.indexOf('show') === -1) {
+                            menu.className = cls + ' show';
+                        } else {
+                            menu.className = cls.replace(' show', '');
+                        }
                     }
                 });
+            }
 
-                // 2. Điều khiển menu Danh mục sản phẩm xổ xuống bên trái
-                var catButtons = document.getElementsByClassName('cat-toggle-btn');
-                for (var k = 0; k < catButtons.length; k++) {
-                    catButtons[k].onclick = function (e) {
-                        e.preventDefault();
-                        var btn = e.currentTarget;
-                        if (!btn) return;
-
-                        var subMenu = btn.nextElementSibling;
-                        var arrow = btn.querySelector('.cat-arrow');
-                        var isCurrentlyOpen = subMenu && subMenu.style.display === 'block';
-
-                        var allSubMenus = document.getElementsByClassName('cat-sub-menu');
-                        for (var m = 0; m < allSubMenus.length; m++) {
-                            allSubMenus[m].style.display = 'none';
-                        }
-                        var allArrows = document.getElementsByClassName('cat-arrow');
-                        for (var n = 0; n < allArrows.length; n++) {
-                            allArrows[n].style.transform = 'rotate(0deg)';
-                        }
-
-                        if (!isCurrentlyOpen && subMenu) {
-                            subMenu.style.display = 'block';
-                            if (arrow) {
-                                arrow.style.transform = 'rotate(180deg)';
-                            }
-                        }
-                    };
+            // Đóng menu Tài khoản khi bấm ra vùng trống bên ngoài
+            document.addEventListener('click', function () {
+                var openMenus = document.getElementsByClassName('dropdown-menu show');
+                for (var j = 0; j < openMenus.length; j++) {
+                    openMenus[j].className = String(openMenus[j].className).replace(' show', '');
                 }
+            });
+
+            // 2. Điều khiển menu Danh mục sản phẩm xổ xuống bên trái (Accordion)
+            var catButtons = document.getElementsByClassName('cat-toggle-btn');
+            for (var k = 0; k < catButtons.length; k++) {
+                catButtons[k].addEventListener('click', function (e) {
+                    e.preventDefault();
+                    var btn = e.currentTarget;
+                    if (!(btn instanceof Element)) return;
+
+                    var subMenu = btn.nextElementSibling;
+                    var isCurrentlyOpen = subMenu && (subMenu.getAttribute('style') || '').indexOf('block') !== -1;
+
+                    var allSubMenus = document.getElementsByClassName('cat-sub-menu');
+                    for (var m = 0; m < allSubMenus.length; m++) {
+                        allSubMenus[m].setAttribute('style', 'display: none;');
+                    }
+
+                    if (subMenu && !isCurrentlyOpen) {
+                        subMenu.setAttribute('style', 'display: block;');
+                    }
+                });
+            }
     </script>
+
     @RenderSection("scripts", required: false)
 </body>
 

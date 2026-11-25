@@ -1,76 +1,93 @@
 ﻿@model bachhoaxanh.Models.Order
 @{
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
-    ViewBag.Title = "Hóa đơn #" + Model.OrderID;
+    ViewBag.Title = "Chi tiết hóa đơn #" + Model.OrderID;
     var details = ViewBag.OrderDetails as List<bachhoaxanh.Models.OrderDetail>;
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="fw-bold text-dark m-0">CHI TIẾT HÓA ĐƠN BÁN HÀNG</h4>
-    <a href="/AdminManage/Orders" class="btn btn-outline-secondary">Quay lại danh sách đơn</a>
+    <a href="/AdminManage/Orders" class="btn btn-outline-secondary btn-sm fw-bold">Quay lại danh sách đơn</a>
 </div>
 
 @if (TempData["SuccessMessage"] != null)
 {
-    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
 }
 
-<!-- Giao diện Hóa đơn mua hàng thực tế -->
-<div class="card shadow-sm border mx-auto" style="max-width: 850px;">
-    <div class="card-header bg-dark text-white p-4 d-flex justify-content-between align-items-center">
+<!-- PHIẾU XUẤT KHO & HÓA ĐƠN BÁN LẺ -->
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden mx-auto" style="max-width: 680px;">
+    <!-- Header đen chữ vàng đặc trưng -->
+    <div class="bg-dark text-white p-4 d-flex justify-content-between align-items-center">
         <div>
-            <h4 class="mb-0 fw-bold text-warning">SIÊU THỊ BÁCH HÓA XANH</h4>
-            <small>Phiếu xuất kho & Hóa đơn bán lẻ</small>
+            <h5 class="fw-bold text-warning m-0">SIÊU THỊ BÁCH HÓA XANH</h5>
+            <small class="text-white-50">Phiếu xuất kho &amp; Hóa đơn bán lẻ</small>
         </div>
         <div class="text-end">
-            <h5 class="mb-0 fw-bold">HÓA ĐƠN #@Model.OrderID</h5>
-            <small>Ngày lập: @String.Format("{0:dd/MM/yyyy HH:mm}", Model.OrderDate)</small>
+            <div class="fw-bold fs-5">HÓA ĐƠN #@Model.OrderID</div>
+            <small class="text-white-50">Ngày lập: @(Model.OrderDate.HasValue ? Model.OrderDate.Value.ToString("dd/MM/yyyy HH:mm") : "")</small>
         </div>
     </div>
 
     <div class="card-body p-4">
-        <div class="row mb-4 border-bottom pb-3">
-            <div class="col-sm-6">
-                <h6 class="text-muted text-uppercase small fw-bold">Thông tin người mua</h6>
-                <p class="mb-1 fw-bold">@(Model.User != null ? Model.User.FullName : "")</p>
-                <p class="mb-1 small">Email: @(Model.User != null ? Model.User.Email : "")</p>
-                <p class="mb-0 small">SĐT: @(Model.User != null ? Model.User.Phone : "")</p>
+        <!-- Thông tin người mua & Địa chỉ nhận hàng -->
+        <div class="row border-bottom pb-3 mb-3">
+            <div class="col-6">
+                <div class="small text-muted fw-bold text-uppercase mb-1">THÔNG TIN NGƯỜI MUA</div>
+                <div class="fw-bold text-dark">@(Model.User != null ? Model.User.FullName : "Khách hàng")</div>
+                <div class="small text-muted">Email: @(Model.User != null ? Model.User.Email : "")</div>
+                <div class="small text-muted">SĐT: @(Model.User != null ? Model.User.Phone : "")</div>
             </div>
-            <div class="col-sm-6 text-sm-end mt-3 mt-sm-0">
-                <h6 class="text-muted text-uppercase small fw-bold">Địa chỉ nhận hàng</h6>
-                <p class="mb-2">@Model.ShippingAddress</p>
-
-                <!-- Form cập nhật trạng thái đơn hàng -->
-                @if (Model.Status == "Khách hủy đơn")
-                {
-                    <div class="alert alert-danger py-2 px-3 d-inline-block fw-bold m-0">
-                        Trạng thái: Khách hủy đơn (Đã hoàn trả tồn kho)
-                    </div>
-                }
-                else
-                {
-                    <form action="/AdminManage/UpdateOrderStatus" method="POST" class="d-inline-flex gap-2">
-                        <input type="hidden" name="orderId" value="@Model.OrderID" />
-                        <select name="status" class="form-select form-select-sm fw-bold">
-                            <option value="Chờ xử lý" @(Model.Status == "Chờ xử lý" ? "selected" : "")>Chờ xử lý</option>
-                            <option value="Đang giao hàng" @(Model.Status == "Đang giao hàng" ? "selected" : "")>Đang giao hàng</option>
-                            <option value="Đã giao thành công" @(Model.Status == "Đã giao thành công" ? "selected" : "")>Đã giao thành công</option>
-                            <option value="Đã hủy" @(Model.Status == "Đã hủy" ? "selected" : "")>Admin hủy đơn</option>
-                        </select>
-                        <button type="submit" class="btn btn-success btn-sm fw-bold">Cập nhật</button>
-                    </form>
-                }
-
+            <div class="col-6 text-end">
+                <div class="small text-muted fw-bold text-uppercase mb-1">ĐỊA CHỈ NHẬN HÀNG</div>
+                <div class="fw-semibold text-dark">@Model.ShippingAddress</div>
             </div>
         </div>
 
-        <table class="table table-bordered align-middle text-center">
-            <thead class="table-light">
+        <!-- Trạng thái hiện tại & Form cập nhật duy nhất -->
+        <div class="bg-light rounded-3 p-3 mb-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                <span class="small fw-bold text-muted">TRẠNG THÁI HIỆN TẠI:</span>
+                <span class="badge @(Model.Status != null && Model.Status.StartsWith("Đã hủy") ? "bg-danger" : (Model.Status == "Đã giao thành công" || Model.Status == "Đã thanh toán" ? "bg-success" : "bg-warning text-dark")) fs-6">
+                    @Model.Status
+                </span>
+            </div>
+
+            <form id="adminStatusForm" action="/AdminManage/UpdateOrderStatus" method="POST" class="mt-2 pt-2 border-top">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="orderId" value="@Model.OrderID" />
+
+                <div class="d-flex gap-2">
+                    <select name="status" id="orderStatusSelect" class="form-select form-select-sm fw-bold">
+                        <option value="Chờ xử lý" @(Model.Status == "Chờ xử lý" ? "selected" : "")>Chờ xử lý</option>
+                        <option value="Đã thanh toán" @(Model.Status == "Đã thanh toán" ? "selected" : "")>Đã thanh toán</option>
+                        <option value="Đang giao hàng" @(Model.Status == "Đang giao hàng" ? "selected" : "")>Đang giao hàng</option>
+                        <option value="Đã giao thành công" @(Model.Status == "Đã giao thành công" ? "selected" : "")>Đã giao thành công</option>
+                        <option value="Khác" @(Model.Status != null && Model.Status.StartsWith("Đã hủy") ? "selected" : "")>Khác (Hủy đơn &amp; nhập lý do)</option>
+                    </select>
+                    <button type="submit" class="btn btn-success btn-sm fw-bold px-4 flex-shrink-0">Cập nhật</button>
+                </div>
+
+                <!-- Ô nhập lý do hủy đơn (Tự động bật ra khi chọn "Khác") -->
+                <div id="cancelReasonBox" class="mt-2" style="@(Model.Status != null && Model.Status.StartsWith("Đã hủy") ? "display: block;" : "display: none;")">
+                    <input type="text" name="cancelReason" id="cancelReasonInput" class="form-control form-control-sm border-danger"
+                           value="@(Model.Status != null && Model.Status.StartsWith("Đã hủy do:") ? Model.Status.Replace("Đã hủy do:", "").Trim() : "")"
+                           placeholder="Nhập lý do hủy đơn (VD: Hết hàng, Sai địa chỉ, Khách không nghe máy)..." />
+                </div>
+            </form>
+        </div>
+
+        <!-- Bảng chi tiết sản phẩm -->
+        <table class="table table-bordered align-middle text-center mb-3">
+            <thead class="table-light small">
                 <tr>
-                    <th>STT</th>
+                    <th style="width: 60px;">STT</th>
                     <th class="text-start">Tên mặt hàng</th>
                     <th>Đơn giá</th>
-                    <th>Số lượng</th>
+                    <th style="width: 90px;">Số lượng</th>
                     <th class="text-end">Thành tiền</th>
                 </tr>
             </thead>
@@ -78,24 +95,55 @@
                 @if (details != null)
                 {
                     int stt = 1;
-                    foreach (var d in details)
+                    foreach (var item in details)
                     {
                         <tr>
-                            <td>@(stt++)</td>
-                            <td class="text-start fw-bold">@(d.Product != null ? d.Product.ProductName : "SP #" + d.ProductID)</td>
-                            <td>@String.Format("{0:0,0}", d.Price) đ</td>
-                            <td>@d.Quantity</td>
-                            <td class="text-end fw-bold">@String.Format("{0:0,0}", d.Price * d.Quantity) đ</td>
+                            <td>@stt</td>
+                            <td class="text-start fw-bold">@(item.Product != null ? item.Product.ProductName : "Sản phẩm")</td>
+                            <td>@String.Format("{0:0,0}", item.Price) đ</td>
+                            <td>@item.Quantity</td>
+                            <td class="text-end fw-bold">@String.Format("{0:0,0}", item.Price * item.Quantity) đ</td>
                         </tr>
+                        stt++;
                     }
                 }
             </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="4" class="text-end fw-bold fs-5">TỔNG TIỀN THANH TOÁN:</td>
-                    <td class="text-end fw-bold fs-5 text-danger">@String.Format("{0:0,0}", Model.TotalAmount) đ</td>
-                </tr>
-            </tfoot>
         </table>
+
+        <div class="d-flex justify-content-end align-items-center gap-3 pt-2">
+            <span class="fw-bold text-dark">TỔNG TIỀN THANH TOÁN:</span>
+            <span class="fw-bold fs-4 text-danger">@String.Format("{0:0,0}", Model.TotalAmount) đ</span>
+        </div>
     </div>
 </div>
+
+<script>
+        var statusSel = document.getElementById('orderStatusSelect');
+        var reasonBox = document.getElementById('cancelReasonBox');
+        var reasonInp = document.getElementById('cancelReasonInput');
+        var adminStatusForm = document.getElementById('adminStatusForm');
+
+        if (statusSel) {
+            statusSel.addEventListener('change', function () {
+                var val = (statusSel && "value" in statusSel) ? String(statusSel.value) : "";
+                if (val === "Khác") {
+                    if (reasonBox) reasonBox.setAttribute('style', 'display: block;');
+                    if (reasonInp instanceof HTMLElement) reasonInp.focus();
+                } else {
+                    if (reasonBox) reasonBox.setAttribute('style', 'display: none;');
+                }
+            });
+        }
+
+        if (adminStatusForm) {
+            adminStatusForm.addEventListener('submit', function (evt) {
+                var val = (statusSel && "value" in statusSel) ? String(statusSel.value) : "";
+                var reasonText = (reasonInp && "value" in reasonInp) ? String(reasonInp.value).trim() : "";
+                if (val === "Khác" && !reasonText) {
+                    evt.preventDefault();
+                    alert("Vui lòng nhập lý do hủy đơn hàng trước khi bấm Cập nhật!");
+                    if (reasonInp instanceof HTMLElement) reasonInp.focus();
+                }
+            });
+        }
+</script>

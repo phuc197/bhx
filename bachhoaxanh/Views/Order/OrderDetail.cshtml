@@ -6,26 +6,47 @@
     long amountInt = Convert.ToInt64(Model.TotalAmount);
     string transferMemo = "BHX" + Model.OrderID;
     string qrSrc = "https://img." + "vietqr.io/image/MB-1972482006-qr_only.png?amount=" + amountInt + "&addInfo=" + transferMemo + "&accountName=NGUYEN%20HOANG%20PHUC";
+
+    bool isCancelled = Model.Status != null && (Model.Status.StartsWith("Đã hủy") || Model.Status == "Khác" || Model.Status == "Khách hủy đơn");
+    bool isSuccess = Model.Status == "Đã thanh toán" || Model.Status == "Đã giao thành công";
 }
 
 <div class="container my-4" style="max-width: 720px;">
-    <!-- 1. KHUNG THÔNG BÁO ĐẶT HÀNG THÀNH CÔNG -->
+    <!-- 1. KHUNG THÔNG TIN ĐƠN HÀNG -->
     <div class="card border-0 shadow-sm rounded-4 p-4 mb-3">
         <div class="text-center mb-3">
-            <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 48px; height: 48px; font-size: 24px;">
-                &#10004;
-            </div>
-            <h5 class="fw-bold text-success m-0">ĐẶT HÀNG THÀNH CÔNG</h5>
+            @if (isCancelled)
+            {
+                <div class="bg-danger text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 48px; height: 48px; font-size: 24px;">
+                    &#10006;
+                </div>
+                <h5 class="fw-bold text-danger m-0">ĐƠN HÀNG ĐÃ BỊ HỦY</h5>
+            }
+            else
+            {
+                <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 48px; height: 48px; font-size: 24px;">
+                    &#10004;
+                </div>
+                <h5 class="fw-bold text-success m-0">ĐẶT HÀNG THÀNH CÔNG</h5>
+            }
             <small class="text-muted">Mã đơn hàng: #@Model.OrderID</small>
         </div>
 
         <div class="border-top pt-3">
-            <div class="d-flex justify-content-between mb-2">
-                <span class="text-muted">Trạng thái thanh toán:</span>
-                <span id="orderStatusBadge" class="fw-bold @(Model.Status == "Đã thanh toán" ? "text-success" : "text-warning")">
-                    @Model.Status
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted">Trạng thái đơn hàng:</span>
+                <span id="orderStatusBadge" class="fw-bold @(isCancelled ? "text-danger" : (isSuccess ? "text-success" : "text-warning"))">
+                    @(Model.Status == "Khác" ? "Đã hủy bởi cửa hàng" : Model.Status)
                 </span>
             </div>
+
+            @if (isCancelled)
+            {
+                <div class="alert alert-danger fw-bold py-2 px-3 my-2 small">
+                    &#9888; Thông báo: Đơn hàng của bạn @(Model.Status == "Khác" ? "đã bị hủy bởi cửa hàng." : Model.Status.ToLower() + ".")
+                </div>
+            }
+
             <div class="d-flex justify-content-between mb-2">
                 <span class="text-muted">Tổng thanh toán:</span>
                 <strong class="text-danger fs-5">@String.Format("{0:0,0}", Model.TotalAmount)đ</strong>
@@ -37,7 +58,7 @@
         </div>
     </div>
 
-    <!-- 2. KHUNG QUÉT MÃ VIETQR TỰ ĐỘNG THEO SỐ TIỀN ĐƠN HÀNG & ĐẾM NGƯỢC 10 PHÚT -->
+    <!-- 2. KHUNG QUÉT MÃ VIETQR (CHỈ HIỆN KHI ĐANG CHỜ THANH TOÁN QR) -->
     @if (Model.Status == "Chờ thanh toán QR")
     {
         <div id="qrPaymentSection" class="card border-0 shadow-sm rounded-4 p-4 mb-3 text-center">

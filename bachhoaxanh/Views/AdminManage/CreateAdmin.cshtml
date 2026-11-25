@@ -1,37 +1,101 @@
 ﻿@model bachhoaxanh.Models.User
 @{
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
-    ViewBag.Title = "Thêm quản trị viên";
+    ViewBag.Title = "Thêm tài khoản quản trị viên";
 }
 
-<div class="container-fluid py-3" style="max-width: 600px;">
-    <h4 class="fw-bold text-success mb-4 border-bottom pb-2">THÊM TÀI KHOẢN QUẢN TRỊ VIÊN</h4>
+<div class="card border-0 shadow-sm rounded-4 p-4" style="max-width: 650px;">
+    <h4 class="fw-bold text-success border-bottom pb-3 mb-4">THÊM TÀI KHOẢN QUẢN TRỊ VIÊN</h4>
 
-    <form action="/AdminManage/CreateAdmin" method="POST">
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(false, "", new { @class = "text-danger small mb-3" })
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+    }
 
-        <div class="mb-3">
-            <label class="form-label fw-bold">Họ và tên <span class="text-danger">*</span></label>
-            <input type="text" name="FullName" class="form-control" required />
-        </div>
+<form id="createAdminForm" action="/AdminManage/CreateAdmin" method="POST">
+    @Html.AntiForgeryToken()
 
-        <div class="mb-3">
-            <label class="form-label fw-bold">Email đăng nhập <span class="text-danger">*</span></label>
-            <input type="email" name="Email" class="form-control" required />
-        </div>
+    <div class="mb-3">
+        <label class="form-label fw-bold small">Họ và tên <span class="text-danger">*</span></label>
+        <input type="text" name="FullName" id="AdminFullName" class="form-control"
+               value="@(Model != null ? Model.FullName : "")"
+               pattern="^[a-zA-ZÀ-ỹ][a-zA-ZÀ-ỹ\s]{1,49}$"
+               title="Họ và tên phải bắt đầu bằng chữ cái, chỉ chứa chữ cái và khoảng trắng (từ 2 đến 50 ký tự)"
+               placeholder="Ví dụ: Nguyễn Văn Quản Trị" required />
+    </div>
 
-        <div class="mb-3">
-            <label class="form-label fw-bold">Mật khẩu <span class="text-danger">*</span></label>
-            <input type="password" name="PasswordHash" class="form-control" minlength="6" required />
-        </div>
+    <div class="mb-3">
+        <label class="form-label fw-bold small">Email đăng nhập <span class="text-danger">*</span></label>
+        <input type="email" name="Email" id="AdminEmail" class="form-control"
+               value="@(Model != null ? Model.Email : "")"
+               placeholder="admin@bachhoaxanh.com" required />
+    </div>
 
-        <div class="mb-4">
-            <label class="form-label fw-bold">Số điện thoại</label>
-            <input type="text" name="Phone" class="form-control" />
-        </div>
+    <div class="mb-3">
+        <label class="form-label fw-bold small">Mật khẩu <span class="text-danger">*</span></label>
+        <input type="password" name="PasswordHash" id="AdminPassword" class="form-control"
+               minlength="6"
+               pattern="^\S{6,}$"
+               title="Mật khẩu phải từ 6 ký tự trở lên và không được chứa dấu cách (khoảng trắng)"
+               placeholder="Nhập mật khẩu tối thiểu 6 ký tự (không dấu cách)..." required />
+    </div>
 
+
+    <div class="mb-4">
+        <label class="form-label fw-bold small">Số điện thoại <span class="text-danger">*</span></label>
+        <input type="tel" name="Phone" id="AdminPhone" class="form-control"
+               value="@(Model != null ? Model.Phone : "")"
+               maxlength="10"
+               pattern="^0[1-9][0-9]{8}$"
+               title="Số điện thoại phải bắt đầu bằng 1 số 0 duy nhất và gồm đúng 10 chữ số (VD: 0912345678)"
+               placeholder="Nhập đúng 10 số bắt đầu bằng 1 số 0..." required />
+    </div>
+
+    <div class="d-flex gap-2">
         <button type="submit" class="btn btn-success fw-bold px-4">Tạo tài khoản Admin</button>
-        <a href="/AdminManage/Admins" class="btn btn-outline-secondary ms-2">Quay lại</a>
-    </form>
+        <a href="/AdminManage/Users" class="btn btn-outline-secondary fw-bold px-3">Quay lại</a>
+    </div>
+</form>
 </div>
+
+<script>
+    var adminForm = document.getElementById('createAdminForm');
+    if (adminForm) {
+        adminForm.addEventListener('submit', function (evt) {
+            var nameEl = document.getElementById('AdminFullName');
+            var passEl = document.getElementById('AdminPassword');
+            var phoneEl = document.getElementById('AdminPhone');
+
+            var nameVal = (nameEl && "value" in nameEl) ? String(nameEl.value).trim() : "";
+            var passVal = (passEl && "value" in passEl) ? String(passEl.value) : "";
+            var phoneVal = (phoneEl && "value" in phoneEl) ? String(phoneEl.value).trim() : "";
+
+            // 1. Chặn tên không bắt đầu bằng chữ cái
+            var nameRegex = /^[a-zA-ZÀ-ỹ][a-zA-ZÀ-ỹ\s]{1,49}$/;
+            if (!nameRegex.test(nameVal)) {
+                evt.preventDefault();
+                alert("Họ và tên không hợp lệ! Tên phải bắt đầu bằng chữ cái tiếng Việt/Anh và chỉ chứa chữ cái, khoảng trắng (tối thiểu 2 ký tự).");
+                if (nameEl instanceof HTMLElement) nameEl.focus();
+                return;
+            }
+
+            // 2. Chặn mật khẩu ngắn hơn 6 ký tự hoặc có chứa dấu cách
+            if (passVal.length < 6 || /\s/.test(passVal)) {
+                evt.preventDefault();
+                alert("Mật khẩu không hợp lệ! Phải có ít nhất 6 ký tự và tuyệt đối không được chứa dấu cách (khoảng trắng).");
+                if (passEl instanceof HTMLElement) passEl.focus();
+                return;
+            }
+
+
+            // 3. Chặn số điện thoại sai định dạng (VD: 0012345678 hoặc thiếu số)
+            var phoneRegex = /^0[1-9][0-9]{8}$/;
+            if (!phoneRegex.test(phoneVal)) {
+                evt.preventDefault();
+                alert("Số điện thoại không hợp lệ! Phải bắt đầu bằng duy nhất 1 số 0 (không được nhập 00...) và gồm đúng 10 chữ số.");
+                if (phoneEl instanceof HTMLElement) phoneEl.focus();
+                return;
+            }
+        });
+    }
+</script>

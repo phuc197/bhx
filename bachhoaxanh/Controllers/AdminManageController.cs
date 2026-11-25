@@ -53,19 +53,76 @@ namespace bachhoaxanh.Controllers
             return View(order);
         }
 
-        // Cập nhật trạng thái giao hàng (Chờ xử lý -> Đang giao -> Đã giao)
+
+        // ==========================================
+        // CẬP NHẬT TRẠNG THÁI ĐƠN HÀNG & XỬ LÝ LÝ DO HỦY (POST)
+        // ==========================================
         [HttpPost]
-        public ActionResult UpdateOrderStatus(int orderId, string status)
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateOrderStatus(int orderId, string status, string cancelReason)
         {
-            var order = db.Orders.Find(orderId);
-            if (order != null)
+            // 1. Kiểm tra quyền Quản trị viên
+            if (Session["UserRole"] == null || Session["UserRole"].ToString() != "Admin")
             {
-                order.Status = status;
-                db.SaveChanges();
-                TempData["SuccessMessage"] = "Đã cập nhật trạng thái đơn hàng #" + orderId + " thành: " + status;
+                return RedirectToAction("Login", "Account");
             }
-            return RedirectToAction("OrderDetails", new { id = orderId });
+
+            // 2. Tìm đơn hàng trong SQL Server
+            var order = db.Orders.Find(orderId);
+            if (order == null)
+            {
+                return HttpNotFound();
+            }
+
+            string oldStatus = order.Status ?? "";
+
+            // 3. Xử lý trường hợp Admin chọn "Khác" (Hủy đơn kèm lý do)
+            if (status == "Khác" || status == "Admin hủy đơn")
+            {
+                string cleanReason = string.IsNullOrWhiteSpace(cancelReason)
+                    ? "Cửa hàng tạm hết hàng"
+                    : cancelReason.Trim();
+
+                order.Status = "Đã hủy do: " + cleanReason;
+
+                // Hoàn trả tồn kho nếu đơn này trước đó chưa từng bị hủy
+                bool wasAlreadyCancelled = oldStatus.StartsWith("Đã hủy")
+                                           || oldStatus == "Khách hủy đơn"
+                                           || oldStatus == "Khác";
+
+                if (!wasAlreadyCancelled)
+                {
+                    var details = db.OrderDetails.Where(d => d.OrderID == orderId).ToList();
+                    foreach (var item in details)
+                    {
+                        var product = db.Products.Find(item.ProductID);
+                        if (product != null)
+                        {
+                            product.StockQuantity += item.Quantity;
+                            product.SoldQuantity -= item.Quantity;
+                            if (product.SoldQuantity < 0)
+                            {
+                                product.SoldQuantity = 0;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // 4. Các trạng thái bình thường (Chờ xử lý, Đã thanh toán, Đang giao hàng, Đã giao thành công)
+                order.Status = status;
+            }
+
+            // 5. Lưu thay đổi vào Database và quay lại trang chi tiết hóa đơn
+            db.SaveChanges();
+            TempData["SuccessMessage"] = "Đã cập nhật trạng thái đơn hàng #" + orderId + " thành: " + order.Status;
+
+            // Chuyển hướng chuẩn xác về lại trang Chi tiết hóa đơn Admin (không bao giờ bị lỗi 404)
+            return RedirectToAction("Orders");
+
         }
+
 
         // ==========================================
         // 3. QUẢN LÝ KHÁCH HÀNG (Chỉ xem & Chi tiết nhúng Partial View đơn hàng)
@@ -140,23 +197,54 @@ namespace bachhoaxanh.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateAdmin(User admin)
         {
-            if (db.Users.Any(u => u.Email.ToLower() == admin.Email.ToLower()))
+            // 1. Kiểm tra Họ và tên phải bắt đầu bằng chữ cái (tối thiểu 2 ký tự)
+            if (string.IsNullOrWhiteSpace(admin.FullName) || !System.Text.RegularExpressions.Regex.IsMatch(admin.FullName.Trim(), @"^[\p{L}][\p{L}\s]{1,49}$"))
             {
+                ViewBag.Error = "Họ và tên không hợp lệ! Tên phải bắt đầu bằng chữ cái và tối thiểu 2 ký tự.";
+                return View(admin);
+            }
+
+            // 2. Kiểm tra Email hợp lệ và chưa tồn tại
+            if (string.IsNullOrWhiteSpace(admin.Email) || !System.Text.RegularExpressions.Regex.IsMatch(admin.Email.Trim(), @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            {
+                ViewBag.Error = "Địa chỉ Email đăng nhập không đúng định dạng!";
+                return View(admin);
+            }
+
+            string cleanEmail = admin.Email.Trim().ToLower();
+            if (db.Users.Any(u => u.Email.ToLower() == cleanEmail))
+            {
+                ViewBag.Error = "Email quản trị này đã tồn tại!";
                 ModelState.AddModelError("Email", "Email quản trị này đã tồn tại!");
                 return View(admin);
             }
 
-            if (ModelState.IsValid)
+            // 3. Kiểm tra Mật khẩu tối thiểu 6 ký tự và tuyệt đối không có dấu cách
+            if (string.IsNullOrEmpty(admin.PasswordHash) || admin.PasswordHash.Length < 6 || admin.PasswordHash.Any(char.IsWhiteSpace))
             {
-                admin.Role = "Admin"; // Gán cứng quyền Quản trị viên
-                db.Users.Add(admin);
-                db.SaveChanges();
-                TempData["SuccessMessage"] = "Thêm tài khoản Quản trị viên mới thành công!";
-                return RedirectToAction("Admins");
+                ViewBag.Error = "Mật khẩu phải có độ dài tối thiểu 6 ký tự và không được chứa dấu cách!";
+                return View(admin);
             }
-            return View(admin);
-        }
 
+            // 4. Kiểm tra Số điện thoại đúng 10 số, bắt đầu bằng duy nhất 1 số 0
+            if (string.IsNullOrWhiteSpace(admin.Phone) || !System.Text.RegularExpressions.Regex.IsMatch(admin.Phone.Trim(), @"^0[1-9][0-9]{8}$"))
+            {
+                ViewBag.Error = "Số điện thoại phải bắt đầu bằng duy nhất 1 số 0 và gồm đúng 10 chữ số (VD: 0912345678)!";
+                return View(admin);
+            }
+
+            // 5. Lưu tài khoản Admin mới xuống SQL Server và quay về trang Admins
+            admin.FullName = admin.FullName.Trim();
+            admin.Email = cleanEmail;
+            admin.Phone = admin.Phone.Trim();
+            admin.Role = "Admin";
+
+            db.Users.Add(admin);
+            db.SaveChanges();
+
+            TempData["SuccessMessage"] = "Thêm tài khoản Quản trị viên mới thành công!";
+            return RedirectToAction("Admins");
+        }
         public ActionResult DeleteAdmin(int id)
         {
             int currentUserId = Convert.ToInt32(Session["UserID"]);

@@ -72,7 +72,7 @@
         <a href="/Product/Category" class="small text-success text-decoration-none fw-bold">Xem tất cả</a>
     </div>
 
-    <!-- 2. TẦNG LỌC 1: CÁC NHÓM NGÀNH HÀNG CHÍNH (GIỐNG HÀNG TRÊN CÙNG TRONG ẢNH MẪU) -->
+    <!-- 2. TẦNG LỌC 1: ĐẦY ĐỦ TẤT CẢ NGÀNH HÀNG TRÊN MENU TRÁI -->
     <div class="bg-white rounded-3 shadow-sm p-3 mb-2">
         <div class="d-flex gap-2 overflow-auto pb-1">
             <a href="/Product/Category" class="filter-pill-box @(string.IsNullOrEmpty(activeGroup) && ViewBag.CurrentCategoryId == null ? "filter-pill-active" : "")">
@@ -80,150 +80,189 @@
                 <span class="small">Tất cả</span>
             </a>
 
-            <a href="/Product/Search?keyword=Heo&group=heo" class="filter-pill-box @(activeGroup.Contains("heo") ? "filter-pill-active" : "")">
+            <a href="/Product/Category?keyword=Heo&group=heo" class="filter-pill-box @(activeGroup.Contains("heo") ? "filter-pill-active" : "")">
                 <div class="rounded-circle bg-light border d-flex align-items-center justify-content-center mb-1 fw-bold text-danger" style="width: 40px; height: 40px; font-size: 12px;">HEO</div>
                 <span class="small">Thịt heo</span>
             </a>
 
-            <a href="/Product/Search?keyword=Bò&group=bo" class="filter-pill-box @(activeGroup.Contains("bò") || activeGroup.Contains("bo") ? "filter-pill-active" : "")">
+            <a href="/Product/Category?keyword=Bò&group=bo" class="filter-pill-box @(activeGroup.Contains("bò") || activeGroup.Contains("bo") ? "filter-pill-active" : "")">
                 <div class="rounded-circle bg-light border d-flex align-items-center justify-content-center mb-1 fw-bold text-danger" style="width: 40px; height: 40px; font-size: 12px;">BÒ</div>
                 <span class="small">Thịt bò</span>
             </a>
 
-            <a href="/Product/Category?keyword=Gà&group=ga" class="filter-pill-box @((activeGroup.Contains("gà") || activeGroup.Contains("ga")) && !activeGroup.Contains("trứng") && !activeGroup.Contains("trung") ? "filter-pill-active" : "")">
+            <a href="/Product/Category?keyword=Gà&group=ga" class="filter-pill-box @((activeGroup.Contains("gà") || activeGroup.Contains("ga")) && !activeGroup.Contains("trứng") && !activeGroup.Contains("trung") && !activeGroup.Contains("gạo") ? "filter-pill-active" : "")">
                 <div class="rounded-circle bg-light border d-flex align-items-center justify-content-center mb-1 fw-bold text-warning" style="width: 40px; height: 40px; font-size: 12px;">GÀ</div>
                 <span class="small">Thịt gà</span>
             </a>
 
-            <a href="/Product/Search?keyword=Cá&group=ca" class="filter-pill-box @(activeGroup.Contains("cá") || activeGroup.Contains("ca") ? "filter-pill-active" : "")">
+            <a href="/Product/Category?keyword=Cá&group=ca" class="filter-pill-box @(activeGroup.Contains("cá") || activeGroup.Contains("ca") || activeGroup.Contains("hải sản") ? "filter-pill-active" : "")">
                 <div class="rounded-circle bg-light border d-flex align-items-center justify-content-center mb-1 fw-bold text-primary" style="width: 40px; height: 40px; font-size: 12px;">CÁ</div>
                 <span class="small">Cá, hải sản</span>
             </a>
 
-            <a href="/Product/Search?keyword=Trứng&group=trung" class="filter-pill-box @(activeGroup.Contains("trứng") || activeGroup.Contains("trung") ? "filter-pill-active" : "")">
+            <a href="/Product/Category?keyword=Trứng&group=trung" class="filter-pill-box @(activeGroup.Contains("trứng") || activeGroup.Contains("trung") ? "filter-pill-active" : "")">
                 <div class="rounded-circle bg-light border d-flex align-items-center justify-content-center mb-1 fw-bold text-warning" style="width: 40px; height: 40px; font-size: 11px;">TRỨNG</div>
                 <span class="small">Trứng các loại</span>
             </a>
 
-            <a href="/Product/Search?keyword=Rau&group=rau" class="filter-pill-box @(activeGroup.Contains("rau") ? "filter-pill-active" : "")">
+            <a href="/Product/Category?keyword=Rau&group=rau" class="filter-pill-box @(activeGroup.Contains("rau") || activeGroup.Contains("củ") || activeGroup.Contains("trái") ? "filter-pill-active" : "")">
                 <div class="rounded-circle bg-light border d-flex align-items-center justify-content-center mb-1 fw-bold text-success" style="width: 40px; height: 40px; font-size: 12px;">RAU</div>
                 <span class="small">Rau củ tươi</span>
             </a>
 
-           
+            <a href="/Product/Category?keyword=Dầu&group=giavi" class="filter-pill-box @(activeGroup.Contains("giavi") || activeGroup.Contains("dầu") || activeGroup.Contains("gia vị") || activeGroup.Contains("nước chấm") || activeGroup.Contains("nước mắm") || activeGroup.Contains("hạt nêm") || activeGroup.Contains("đường") ? "filter-pill-active" : "")">
+                <div class="rounded-circle bg-light border d-flex align-items-center justify-content-center mb-1 fw-bold text-warning" style="width: 40px; height: 40px; font-size: 11px;">GIA VỊ</div>
+                <span class="small">Dầu ăn, gia vị</span>
+            </a>
+
+            <a href="/Product/Category?keyword=Gạo&group=dokho" class="filter-pill-box @(activeGroup.Contains("dokho") || activeGroup.Contains("gạo") || activeGroup.Contains("mì") || activeGroup.Contains("bột") || activeGroup.Contains("đậu") || activeGroup.Contains("đồ khô") ? "filter-pill-active" : "")">
+                <div class="rounded-circle bg-light border d-flex align-items-center justify-content-center mb-1 fw-bold text-secondary" style="width: 40px; height: 40px; font-size: 11px;">ĐỒ KHÔ</div>
+                <span class="small">Gạo, bột, đồ khô</span>
+            </a>
+
+            <a href="/Product/Category?keyword=Cà phê&group=caphe" class="filter-pill-box @(activeGroup.Contains("caphe") || activeGroup.Contains("cà phê") || activeGroup.Contains("trà") || activeGroup.Contains("ngũ cốc") ? "filter-pill-active" : "")">
+                <div class="rounded-circle bg-light border d-flex align-items-center justify-content-center mb-1 fw-bold text-dark" style="width: 40px; height: 40px; font-size: 10px;">CÀ PHÊ</div>
+                <span class="small">Cà phê, trà</span>
+            </a>
+
+            <a href="/Product/Category?keyword=Bia&group=giaikhat" class="filter-pill-box @(activeGroup.Contains("giaikhat") || activeGroup.Contains("bia") || activeGroup.Contains("nước ngọt") || activeGroup.Contains("nước suối") || activeGroup.Contains("giải khát") ? "filter-pill-active" : "")">
+                <div class="rounded-circle bg-light border d-flex align-items-center justify-content-center mb-1 fw-bold text-info" style="width: 40px; height: 40px; font-size: 11px;">NƯỚC</div>
+                <span class="small">Bia, giải khát</span>
+            </a>
         </div>
     </div>
 
-    <!-- 3. TẦNG LỌC 2: TỰ ĐỘNG ĐỔI CÁC NÚT LỌC CHI TIẾT THEO NHÓM ĐANG CHỌN -->
-    <!-- 3. TẦNG LỌC 2: GIỮ NGUYÊN THANH LỌC NHANH KHI CHỌN MÓN CON -->
+    <!-- 3. TẦNG LỌC 2: TỰ ĐỘNG ĐỔI CÁC NÚT LỌC CHI TIẾT CHO TẤT CẢ DANH MỤC -->
     @{
         var quickFilters = new Dictionary<string, string>();
         string currentGroupCode = "";
 
-        if (activeGroup.Contains("rau") || activeGroup.Contains("củ") || activeGroup.Contains("trái"))
+        if (activeGroup.Contains("giavi") || activeGroup.Contains("dầu") || activeGroup.Contains("gia vị") || activeGroup.Contains("nước chấm") || activeGroup.Contains("nước mắm") || activeGroup.Contains("hạt nêm") || activeGroup.Contains("đường"))
+        {
+            currentGroupCode = "giavi";
+            quickFilters = new Dictionary<string, string> {
+                { "Dầu ăn các loại", "Dầu" },
+                { "Nước mắm, nước tương", "Nước mắm" },
+                { "Hạt nêm, bột ngọt", "Hạt nêm" },
+                { "Đường, muối, gia vị", "Đường" }
+            };
+        }
+        else if (activeGroup.Contains("dokho") || activeGroup.Contains("gạo") || activeGroup.Contains("mì") || activeGroup.Contains("bột") || activeGroup.Contains("đậu") || activeGroup.Contains("đồ khô"))
+        {
+            currentGroupCode = "dokho";
+            quickFilters = new Dictionary<string, string> {
+                { "Gạo các loại", "Gạo" },
+                { "Mì, miến, phở ăn liền", "Mì" },
+                { "Bột các loại", "Bột" },
+                { "Đậu, hạt, đồ khô", "Đậu" }
+            };
+        }
+        else if (activeGroup.Contains("caphe") || activeGroup.Contains("cà phê") || activeGroup.Contains("trà") || activeGroup.Contains("ngũ cốc"))
+        {
+            currentGroupCode = "caphe";
+            quickFilters = new Dictionary<string, string> {
+                { "Cà phê hoà tan", "Cà phê hoà tan" },
+                { "Cà phê pha phin", "Cà phê pha phin" },
+                { "Trà khô, túi lọc", "Trà" },
+                { "Ngũ cốc, yến mạch", "Ngũ cốc" }
+            };
+        }
+        else if (activeGroup.Contains("giaikhat") || activeGroup.Contains("bia") || activeGroup.Contains("nước ngọt") || activeGroup.Contains("nước suối") || activeGroup.Contains("giải khát"))
+        {
+            currentGroupCode = "giaikhat";
+            quickFilters = new Dictionary<string, string> {
+                { "Bia, nước có cồn", "Bia" },
+                { "Nước ngọt các loại", "Nước ngọt" },
+                { "Nước suối, khoáng", "Nước suối" },
+                { "Trà đóng chai", "Trà" }
+            };
+        }
+        else if (activeGroup.Contains("rau") || activeGroup.Contains("củ") || activeGroup.Contains("trái"))
         {
             currentGroupCode = "rau";
             quickFilters = new Dictionary<string, string> {
-            { "Tất cả rau", "Rau" },
-            { "Rau muống", "Rau muống" },
-            { "Cải các loại", "Cải" },
-            { "Cà chua", "Cà chua" },
-            { "Khoai, củ", "Khoai" },
-            { "Nấm tươi", "Nấm" }
-        };
-        }
-        else if (activeGroup.Contains("sữa") || activeGroup.Contains("sua") || activeGroup.Contains("kem"))
-        {
-            currentGroupCode = "sua";
-            quickFilters = new Dictionary<string, string> {
-            { "Tất cả sữa", "Sữa" },
-            { "Sữa tươi", "Sữa tươi" },
-            { "Vinamilk", "Vinamilk" },
-            { "Sữa chua", "Sữa chua" },
-            { "Sữa hạt", "Sữa hạt" }
-        };
+                { "Tất cả rau", "Rau" },
+                { "Rau muống", "Rau muống" },
+                { "Cải các loại", "Cải" },
+                { "Cà chua", "Cà chua" },
+                { "Khoai, củ", "Khoai" },
+                { "Trái cây", "Trái" }
+            };
         }
         else if (activeGroup.Contains("trứng") || activeGroup.Contains("trung"))
         {
             currentGroupCode = "trung";
             quickFilters = new Dictionary<string, string> {
-        { "Tất cả trứng", "Trứng" },
-        { "Trứng gà", "Trứng gà" },
-        { "Trứng cút", "Trứng cút" }
-    };
+                { "Tất cả trứng", "Trứng" },
+                { "Trứng gà", "Trứng gà" },
+                { "Trứng vịt", "Trứng vịt" },
+                { "Trứng cút", "Trứng cút" }
+            };
         }
         else if (activeGroup.Contains("gà") || activeGroup.Contains("ga"))
         {
             currentGroupCode = "ga";
             quickFilters = new Dictionary<string, string> {
-        { "Tất cả thịt gà", "Gà" },
-        { "Đùi gà", "Đùi gà" },
-        { "Cánh gà", "Cánh gà" },
-        { "Ức gà", "Ức gà" },
-        { "Chân gà", "Chân gà" }
-    };
+                { "Tất cả thịt gà", "Gà" },
+                { "Đùi gà", "Đùi gà" },
+                { "Cánh gà", "Cánh gà" },
+                { "Ức gà", "Ức gà" },
+                { "Chân gà", "Chân gà" }
+            };
         }
-
-
         else if (activeGroup.Contains("cá") || activeGroup.Contains("ca") || activeGroup.Contains("hải sản"))
         {
             currentGroupCode = "ca";
             quickFilters = new Dictionary<string, string> {
-            { "Tất cả cá", "Cá" },
-            { "Cá hồi", "Cá hồi" },
-            { "Tôm tươi", "Tôm" },
-            { "Mực, bạch tuộc", "Mực" }
-        };
+                { "Tất cả cá", "Cá" },
+                { "Cá hồi", "Cá hồi" },
+                { "Tôm tươi", "Tôm" },
+                { "Mực, bạch tuộc", "Mực" }
+            };
         }
         else if (activeGroup.Contains("bò") || activeGroup.Contains("bo"))
         {
             currentGroupCode = "bo";
-            quickFilters = new Dictionary<string, string> {
-            { "Tất cả thịt bò", "Bò" },
-            { "Nạm bò", "Nạm" },
-            { "Bò xay", "Bò xay" },
-            { "Đùi bò", "Đùi bò" },
-            { "Bò Wagyu", "Wuagu" }
-        };
+            quickFilters = new Dictionary<string, string>
+        {{ "Tất cả thịt bò", "Bò" },
+{ "Nạm bò", "Nạm" },
+{ "Bò xay", "Bò xay" },
+{ "Đùi bò", "Đùi bò" },
+{ "Bò Wagyu", "Wuagu" }
+};
         }
         else if (activeGroup.Contains("heo") || activeGroup.Contains("sườn") || activeGroup.Contains("ba rọi"))
         {
             currentGroupCode = "heo";
             quickFilters = new Dictionary<string, string> {
-            { "Tất cả thịt heo", "Heo" },
-            { "Ba rọi", "Ba rọi" },
-            { "Sườn heo", "Sườn" },
-            { "Thịt xay", "Heo xay" },
-            { "Thịt đùi", "Đùi heo" },
-            { "Nạc vai", "Nạc" }
-        };
+{ "Tất cả thịt heo", "Heo" },
+{ "Ba rọi", "Ba rọi" },
+{ "Sườn heo", "Sườn" },
+{ "Thịt xay", "Heo xay" },
+{ "Thịt đùi", "Đùi heo" },
+{ "Nạc vai", "Nạc" }
+};
         }
-
         else
         {
             quickFilters = new Dictionary<string, string> {
-            { "Thịt bò", "Bò" },
-            { "Thịt heo", "Heo" },
-            { "Rau xanh", "Rau" },
-            { "Sữa tươi", "Sữa" },
-            { "Cá tươi", "Cá" }
-        };
+{ "Thịt bò", "Bò" },
+{ "Thịt heo", "Heo" },
+{ "Rau xanh", "Rau" },
+{ "Dầu ăn", "Dầu" },
+{ "Gạo ngon", "Gạo" },
+{ "Cà phê", "Cà phê" }
+};
         }
     }
-
-    <div class="bg-white rounded-3 shadow-sm p-2 px-3 mb-2 d-flex flex-wrap align-items-center justify-content-between gap-2">
-        <div class="d-flex flex-wrap align-items-center gap-2">
-            <span class="small text-muted fw-bold">Lọc nhanh:</span>
-            @foreach (var qf in quickFilters)
+           @foreach (var qf in quickFilters)
             {
                 <a href="/Product/Category?keyword=@Server.UrlEncode(qf.Value)&group=@currentGroupCode" class="sub-filter-chip @(currentKey == qf.Value.ToLower() ? "sub-filter-active" : "")">
                     @qf.Key
                 </a>
-
             }
         </div>
 
-        <!-- Form lọc theo mức giá bên góc phải (Giữ nguyên nhóm và từ khóa khi lọc giá) -->
         <form id="filterForm" action="/Product/Category" method="GET" class="d-flex align-items-center gap-2">
             <input type="hidden" name="id" value="@ViewBag.CurrentCategoryId" />
             <input type="hidden" name="keyword" value="@ViewBag.Keyword" />
@@ -237,112 +276,110 @@
         </form>
     </div>
 
+<!-- 4. DẢI CAM KẾT CHẤT LƯỢNG BÁCH HÓA XANH -->
+<div class="bg-white rounded-3 shadow-sm py-2 px-3 mb-3 d-flex flex-wrap justify-content-end gap-4 small text-muted">
+    <span><strong class="text-success">&#10004;</strong> Không hài lòng 1 đổi 2</span>
+    <span><strong class="text-success">&#10004;</strong> Không chất tạo nạc, không chất bảo quản</span>
+</div>
 
 
-    <!-- 4. DẢI CAM KẾT CHẤT LƯỢNG BÁCH HÓA XANH -->
-    <div class="bg-white rounded-3 shadow-sm py-2 px-3 mb-3 d-flex flex-wrap justify-content-end gap-4 small text-muted">
-        <span><strong class="text-success">&#10004;</strong> Không hài lòng 1 đổi 2</span>
-        <span><strong class="text-success">&#10004;</strong> Không chất tạo nạc, không chất bảo quản</span>
+<!-- Danh sách sản phẩm -->
+@if (!Model.Any())
+{
+    <div class="alert alert-warning text-center py-5">
+        <h5>Không tìm thấy sản phẩm bách hóa nào phù hợp!</h5>
+        <a href="/" class="btn btn-success mt-2">Quay lại trang chủ</a>
     </div>
+}
+else
+{
+    <!-- Lưới sản phẩm hiển thị 4 thẻ dọc mỗi hàng giống hệt Bách Hóa Xanh -->
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100 border shadow-sm bg-white d-flex flex-column justify-content-between" style="border-radius: 8px; overflow: hidden;">
 
+                    <!-- 1. KHUNG HÌNH ẢNH PHÍA TRÊN -->
+                    <div class="position-relative text-center p-3 bg-white">
+                        <a href="/Product/Detail/@item.ProductID" class="text-decoration-none">
+                            <img src="~/Images/@item.ImageURL" class="img-fluid" style="height: 150px; object-fit: contain;" alt="@item.ProductName" />
+                        </a>
+                    </div>
 
-    <!-- Danh sách sản phẩm -->
-    @if (!Model.Any())
-    {
-        <div class="alert alert-warning text-center py-5">
-            <h5>Không tìm thấy sản phẩm bách hóa nào phù hợp!</h5>
-            <a href="/" class="btn btn-success mt-2">Quay lại trang chủ</a>
-        </div>
-    }
-    else
-    {
-        <!-- Lưới sản phẩm hiển thị 4 thẻ dọc mỗi hàng giống hệt Bách Hóa Xanh -->
-        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
-            @foreach (var item in Model)
-            {
-                <div class="col">
-                    <div class="card h-100 border shadow-sm bg-white d-flex flex-column justify-content-between" style="border-radius: 8px; overflow: hidden;">
-
-                        <!-- 1. KHUNG HÌNH ẢNH PHÍA TRÊN -->
-                        <div class="position-relative text-center p-3 bg-white">
-                            <a href="/Product/Detail/@item.ProductID" class="text-decoration-none">
-                                <img src="~/Images/@item.ImageURL" class="img-fluid" style="height: 150px; object-fit: contain;" alt="@item.ProductName" />
+                    <!-- 2. THÔNG TIN TÊN, GIÁ, TỒN KHO Ở GIỮA -->
+                    <div class="card-body p-2 pt-0 d-flex flex-column justify-content-between text-start">
+                        <div>
+                            <!-- Tên sản phẩm -->
+                            <a href="/Product/Detail/@item.ProductID" class="text-decoration-none text-dark">
+                                <div class="fw-normal text-dark mb-1" style="font-size: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 40px;" title="@item.ProductName">
+                                    @item.ProductName
+                                </div>
                             </a>
-                        </div>
 
-                        <!-- 2. THÔNG TIN TÊN, GIÁ, TỒN KHO Ở GIỮA -->
-                        <div class="card-body p-2 pt-0 d-flex flex-column justify-content-between text-start">
-                            <div>
-                                <!-- Tên sản phẩm -->
-                                <a href="/Product/Detail/@item.ProductID" class="text-decoration-none text-dark">
-                                    <div class="fw-normal text-dark mb-1" style="font-size: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 40px;" title="@item.ProductName">
-                                        @item.ProductName
-                                    </div>
-                                </a>
-
-                                <!-- Giá bán + Đơn vị tính -->
-                                <div class="mb-1">
-                                    <span class="fw-bold text-dark" style="font-size: 16px;">@String.Format("{0:0,0}", item.Price)đ</span>
-                                    <span class="text-muted small">/@item.Unit</span>
-                                </div>
-
-                                <!-- Nhãn trạng thái tồn kho -->
-                                <div class="mb-2">
-                                    @if (item.StockQuantity > 0)
-                                    {
-                                        <span class="badge bg-warning text-dark fw-semibold" style="font-size: 11px;">
-                                            Còn @item.StockQuantity @item.Unit
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-danger text-white" style="font-size: 11px;">
-                                            Tạm hết hàng
-                                        </span>
-                                    }
-                                </div>
+                            <!-- Giá bán + Đơn vị tính -->
+                            <div class="mb-1">
+                                <span class="fw-bold text-dark" style="font-size: 16px;">@String.Format("{0:0,0}", item.Price)đ</span>
+                                <span class="text-muted small">/@item.Unit</span>
                             </div>
 
-                            <!-- 3. NÚT MUA XANH NHẠT ĐẶC TRƯNG BÁCH HÓA XANH Ở ĐÁY THẺ -->
-                            <div class="mt-2">
+                            <!-- Nhãn trạng thái tồn kho -->
+                            <div class="mb-2">
                                 @if (item.StockQuantity > 0)
                                 {
-                                    <a href="/Cart/AddToCart?id=@item.ProductID&quantity=1"
-                                       class="btn w-100 fw-bold py-1"
-                                       style="background-color: #e6f4ea; color: #008848; border: 1px solid #cce8d4; font-size: 14px;">
-                                        MUA
-                                    </a>
+                                    <span class="badge bg-warning text-dark fw-semibold" style="font-size: 11px;">
+                                        Còn @item.StockQuantity @item.Unit
+                                    </span>
                                 }
                                 else
                                 {
-                                    <button class="btn btn-light w-100 text-muted fw-bold py-1" disabled style="font-size: 14px;">
-                                        HẾT HÀNG
-                                    </button>
+                                    <span class="badge bg-danger text-white" style="font-size: 11px;">
+                                        Tạm hết hàng
+                                    </span>
                                 }
                             </div>
                         </div>
 
+                        <!-- 3. NÚT MUA XANH NHẠT ĐẶC TRƯNG BÁCH HÓA XANH Ở ĐÁY THẺ -->
+                        <div class="mt-2">
+                            @if (item.StockQuantity > 0)
+                            {
+                                <a href="/Cart/AddToCart?id=@item.ProductID&quantity=1"
+                                   class="btn w-100 fw-bold py-1"
+                                   style="background-color: #e6f4ea; color: #008848; border: 1px solid #cce8d4; font-size: 14px;">
+                                    MUA
+                                </a>
+                            }
+                            else
+                            {
+                                <button class="btn btn-light w-100 text-muted fw-bold py-1" disabled style="font-size: 14px;">
+                                    HẾT HÀNG
+                                </button>
+                            }
+                        </div>
                     </div>
+
                 </div>
-            }
-        </div>
-
-
-        <!-- Thanh Phân Trang (Pagination) -->
-        if (ViewBag.TotalPages > 1)
-        {
-            <nav class="mt-5">
-                <ul class="pagination justify-content-center">
-                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
-                    {
-                        <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
-                            <a class="page-link" href="/Product/Category?id=@ViewBag.CurrentCategoryId&keyword=@ViewBag.Keyword&priceFilter=@ViewBag.PriceFilter&page=@i">@i</a>
-                        </li>
-                    }
-                </ul>
-            </nav>
+            </div>
         }
+    </div>
+
+
+    <!-- Thanh Phân Trang (Pagination) -->
+    if (ViewBag.TotalPages > 1)
+    {
+        <nav class="mt-5">
+            <ul class="pagination justify-content-center">
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                        <a class="page-link" href="/Product/Category?id=@ViewBag.CurrentCategoryId&keyword=@ViewBag.Keyword&priceFilter=@ViewBag.PriceFilter&page=@i">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
     }
+}
 </div>
 <script>
         var priceSelect = document.getElementById('priceSelect');

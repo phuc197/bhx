@@ -41,7 +41,11 @@ namespace bachhoaxanh.Controllers
             ViewBag.TotalProducts = db.Products.Count();
             ViewBag.TotalOrders = db.Orders.Count();
             ViewBag.TotalCustomers = db.Users.Count(u => u.Role == "Customer");
-            ViewBag.TotalRevenue = db.Orders.Any() ? db.Orders.Sum(o => o.TotalAmount) : 0;
+            decimal totalRevenue = db.Orders
+                          .Where(o => o.Status == "Đã giao thành công")
+                          .Sum(o => (decimal?)o.TotalAmount) ?? 0;
+
+            ViewBag.TotalRevenue = totalRevenue;
 
             return View();
         }
@@ -173,6 +177,50 @@ namespace bachhoaxanh.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateOrderStatus(int orderId, string status, string cancelReason)
+        {
+            if (Session["UserRole"] == null || Session["UserRole"].ToString() != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var order = db.Orders.Find(orderId);
+            if (order == null) return HttpNotFound();
+
+            string oldStatus = order.Status ?? "";
+
+            if (status == "Khác")
+            {
+                string cleanReason = string.IsNullOrWhiteSpace(cancelReason) ? "Cửa hàng tạm hết hàng" : cancelReason.Trim();
+                order.Status = "Đã hủy do: " + cleanReason;
+
+                // Nếu trước đó đơn chưa bị hủy thì hoàn trả lại tồn kho cho sản phẩm
+                if (!oldStatus.StartsWith("Đã hủy") && oldStatus != "Khách hủy đơn")
+                {
+                    var details = db.OrderDetails.Where(d => d.OrderID == orderId).ToList();
+                    foreach (var item in details)
+                    {
+                        var prod = db.Products.Find(item.ProductID);
+                        if (prod != null)
+                        {
+                            prod.StockQuantity += item.Quantity;
+                            prod.SoldQuantity -= item.Quantity;
+                            if (prod.SoldQuantity < 0) prod.SoldQuantity = 0;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                order.Status = status;
+            }
+
+            db.SaveChanges();
+            TempData["SuccessMessage"] = "Đã cập nhật trạng thái đơn hàng #" + orderId + " thành: " + order.Status;
+            return RedirectToAction("OrderDetail", new { id = orderId });
+        }
 
         protected override void Dispose(bool disposing)
         {

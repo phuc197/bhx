@@ -211,11 +211,13 @@ namespace BachHoaXanhDB.Controllers
             if (user == null) return HttpNotFound();
 
             // Kiểm tra dữ liệu hợp lệ (Giống quy tắc lúc Đăng ký)
-            if (string.IsNullOrWhiteSpace(fullName) || fullName.StartsWith(" "))
+            // Chặn Họ và tên không bắt đầu bằng chữ cái (VD: "0", "123...", "@abc")
+            if (string.IsNullOrWhiteSpace(fullName) || !System.Text.RegularExpressions.Regex.IsMatch(fullName.Trim(), @"^[\p{L}][\p{L}\s]{1,49}$"))
             {
-                ViewBag.Error = "Họ tên không được để trống hoặc bắt đầu bằng khoảng trắng!";
+                ViewBag.Error = "Họ và tên không hợp lệ! Tên phải bắt đầu bằng chữ cái và chỉ chứa chữ cái, khoảng trắng (tối thiểu 2 ký tự).";
                 return View(user);
             }
+
 
             if (string.IsNullOrEmpty(phone) || !System.Text.RegularExpressions.Regex.IsMatch(phone, @"^0[0-9]{9}$"))
             {
